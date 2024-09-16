@@ -1,5 +1,8 @@
 import { Tabs } from "expo-router";
-import { MaterialIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import AntDesign from '@expo/vector-icons/AntDesign';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useState, useContext } from "react";
 
 export default function TabLayout() {
@@ -27,7 +30,7 @@ export default function TabLayout() {
             }}
                 name="menu"
                 options={{
-                    tabBarIcon: () => <MaterialIcons name="home" size={30} color="#1E4034"
+                    tabBarIcon: () => <AntDesign name="home"  size={30} color="#1E4034" 
                         style={{
                             borderRadius: 200,
                             backgroundColor: route === 'menu' ? '#FFFFFF' : '#FFFFFF00',
@@ -40,7 +43,7 @@ export default function TabLayout() {
             }}
                 name="saude"
                 options={{
-                    tabBarIcon: () => <MaterialIcons name="circle" size={30} color="#1E4034"
+                    tabBarIcon: () => <FontAwesome5 name="notes-medical" size={24} color="#1E4034"
                         style={{
                             borderRadius: 200,
                             backgroundColor: route === 'saude' ? '#FFFFFF' : '#FFFFFF00',
@@ -52,7 +55,7 @@ export default function TabLayout() {
             }}
                 name="despesasFormulario"
                 options={{
-                    tabBarIcon: () => <MaterialIcons name="money" size={30} color="#1E4034"
+                    tabBarIcon: () => <FontAwesome6 name="money-bills" size={24}  color="#1E4034"
                         style={{
                             borderRadius: 200,
                             backgroundColor: route === 'despesasFormulario' ? '#FFFFFF' : '#FFFFFF00',
@@ -64,7 +67,7 @@ export default function TabLayout() {
             }}
                 name="relatorio"
                 options={{
-                    tabBarIcon: () => <MaterialIcons name="add-task" size={30} color="#1E4034"
+                    tabBarIcon: () => <Ionicons name="document-text-outline" size={24} color="#1E4034"
                         style={{
                             borderRadius: 200,
                             backgroundColor: route === 'relatorio' ? '#FFFFFF' : '#FFFFFF00',
