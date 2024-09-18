@@ -5,8 +5,8 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useState, useContext } from "react";
 
-export default function TabLayout() {
-  const [route, setRoute] = useState('menu');
+export default function tabLayout() {
+  const [route, setRoute] = useState('cadastro');
     return (
         <Tabs screenOptions={
             {
@@ -26,14 +26,14 @@ export default function TabLayout() {
             }
         }>
             <Tabs.Screen listeners={{
-                tabPress: (e) => { setRoute('menu'); },
+                tabPress: (e) => { setRoute('cadastro'); },
             }}
-                name="menu"
+                name="cadastro"
                 options={{
                     tabBarIcon: () => <AntDesign name="home"  size={30} color="#1E4034" 
                         style={{
                             borderRadius: 200,
-                            backgroundColor: route === 'menu' ? '#FFFFFF' : '#FFFFFF00',
+                            backgroundColor: route === 'cadastro' ? '#FFFFFF' : '#FFFFFF00',
                         }} />
                 }} />
 
