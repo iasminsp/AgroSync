@@ -14,10 +14,11 @@ const Calendar = () => {
     <View
       style={{
         backgroundColor: '#1E4034',
-        padding: 20,
-        borderRadius: 15,
-        marginTop: 50,
-        marginBottom: 60,
+        padding: 35,
+        margin:10,
+        borderRadius: 20,
+        marginTop: 30,
+        marginBottom: 40,
         alignItems: 'center',
       }}
     >
