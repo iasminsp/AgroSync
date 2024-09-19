@@ -1,4 +1,5 @@
 import { View } from "react-native";
+import BotomSaude from "src/app/components/botaoSaude";
 import Calendar from "src/app/components/Calendar";
 
 export default function saude() {
@@ -7,12 +8,14 @@ export default function saude() {
             style={{
                 flex: 1,
                 backgroundColor: "#d7d7d7",
-                alignItems: "center",
+                
             }} 
             
         >
             <View>
                 <Calendar/>
+                <BotomSaude titulo={"previsao"}/>
+                <BotomSaude titulo={"doentes"}/>
             </View>
         </View>    
     )
