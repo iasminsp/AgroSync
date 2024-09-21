@@ -14,8 +14,8 @@ export default function saude() {
         >
             <View>
                 <Calendar/>
-                <BotomSaude titulo={"previsao"}/>
-                <BotomSaude titulo={"doentes"}/>
+                <BotomSaude titulo={"previsao"} rota={"Previsao"}/>
+                <BotomSaude titulo={"doentes"} rota={"Doentes"}/>
             </View>
         </View>    
     )

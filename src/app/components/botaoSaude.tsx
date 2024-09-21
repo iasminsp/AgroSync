@@ -1,13 +1,18 @@
 import React from 'react';
 import { TouchableOpacity, View, Text } from 'react-native';
-import { MaterialIcons } from "@expo/vector-icons";
+import { useNavigation } from '@react-navigation/native';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
 interface botomProps {
     titulo: string;
+    rota: string;
   }
 
-const BotomSaude: React.FC<botomProps> = ({titulo }) => {
+const BotomSaude: React.FC<botomProps> = ({titulo , rota}) => {
+    const navigation = useNavigation();
+    const handlePress = () => {
+        navigation.navigate(rota);
+    }
   return (
     <View style={{
       borderRadius: 30,
@@ -28,7 +33,7 @@ const BotomSaude: React.FC<botomProps> = ({titulo }) => {
       <Text style={{color:"#d5d5d5",fontSize:18}}>{titulo}</Text>
 
     </View>
-      <TouchableOpacity onPress={() => (true)} style={{ position: 'absolute', marginLeft: 340, marginTop: 35 }}>
+      <TouchableOpacity onPress={handlePress} style={{ position: 'absolute', marginLeft: 340, marginTop: 35 }}>
       <AntDesign name="rightcircleo" size={24} color="white" />
       </TouchableOpacity>
     </View>
