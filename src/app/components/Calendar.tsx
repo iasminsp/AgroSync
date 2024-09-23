@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 
 const Calendar = () => {
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [selectedWeek, setSelectedWeek] = useState<number[] | null>(null);
 
   const daysOfMonth = Array.from({ length: 30 }, (_, i) => i + 1);
 
-  const handleDatePress = (day: number) => {
-    setSelectedDate(`Dia selecionado: ${day}`);
+  const handleWeekPress = (day: number, daysToSelect: number = 7) => {
+    const startDay = day;
+    const endDay = Math.min(day + daysToSelect - 1, daysOfMonth.length);
+    const weekDays = Array.from({ length: endDay - startDay + 1 }, (_, i) => startDay + i);
+    setSelectedWeek(weekDays);
   }
 
   return (
@@ -46,12 +49,12 @@ const Calendar = () => {
               width: 40,
               height: 40,
               margin: 5,
-              borderRadius: 20,
-              backgroundColor: '#fff',
+              borderRadius: 15,
+              backgroundColor: selectedWeek && selectedWeek.includes(day) ? '#24C0C0' : '#fff',
               justifyContent: 'center',
               alignItems: 'center',
             }}
-            onPress={() => handleDatePress(day)}
+            onPress={() => handleWeekPress(day)}
           >
             <Text
               style={{
@@ -60,12 +63,12 @@ const Calendar = () => {
                 fontWeight: 'bold',
               }}
             >
-              {day} {/* Certifique-se de que o texto está dentro de <Text> */}
+              {day}
             </Text>
           </TouchableOpacity>
         ))}
       </View>
-      {selectedDate && (
+      {selectedWeek && (
         <Text
           style={{
             color: '#fff',
@@ -73,11 +76,11 @@ const Calendar = () => {
             marginTop: 10,
           }}
         >
-          {selectedDate} {/* Certifique-se de que o texto está dentro de <Text> */}
+          Semana selecionada: {selectedWeek.join(', ')}
         </Text>
       )}
     </View>
-  )
+  );
 }
 
 export default Calendar;
