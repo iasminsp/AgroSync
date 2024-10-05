@@ -17,7 +17,7 @@ const CardSaude: React.FC<CardProps> = ({ titulo, descricao }) => {
             borderRadius: 12,
             padding: 0,
             justifyContent: "space-between",
-            margin: 8,
+            margin: 10,
             shadowColor: "#000",
             shadowOffset: { width: 0, height: 2 },
             shadowOpacity: 0.25,
@@ -25,10 +25,10 @@ const CardSaude: React.FC<CardProps> = ({ titulo, descricao }) => {
             elevation: 500,
             marginBottom:35,
             backgroundColor: '#1E4034',
-            width: 370,
+            width: 380,
             height: showDetails ? 120 : 100,
         }}>
-            <View style={{ position: 'absolute', marginLeft: 160, marginTop: 30 }}>
+            <View style={{ position: 'absolute', marginLeft: 170, marginTop: 30 }}>
             <Text style={{color:"#d5d5d5",fontSize:18}}>{titulo}</Text>
             </View>
             {showDetails && (

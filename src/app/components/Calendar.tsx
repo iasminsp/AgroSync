@@ -21,7 +21,7 @@ const Calendar = () => {
         margin:10,
         borderRadius: 20,
         marginTop: 30,
-        marginBottom: 40,
+        marginBottom: 35,
         alignItems: 'center',
       }}
     >

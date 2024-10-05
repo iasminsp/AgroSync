@@ -16,7 +16,7 @@ const TituloPD: React.FC<TituloProps> = ({ titulo }) => {
             backgroundColor: '#1E4034',
             padding: 15,
             width: 270,
-            height: 60,
+            height: 50,
             shadowColor: "#000",
             shadowOffset: { width: 0, height: 2 },
             shadowOpacity: 0.25,

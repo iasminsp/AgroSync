@@ -15,7 +15,7 @@ interface SuperiorProps {
             shadowOffset: { width: 0, height: 2 },
             shadowOpacity: 0.25,
             shadowRadius: 3.84,
-            elevation: 5,
+            elevation: 0,
         }}>
             {/* Elemento sobreposto para criar o efeito de borda côncava */}
             <View style={{
@@ -27,7 +27,7 @@ interface SuperiorProps {
                 borderTopRightRadius: 90,
                 backgroundColor: "#d7d7d7", // Cor de fundo para combinar
             }} />
-            <View style={{ position: 'absolute', margin:50,  marginTop:20 }}>
+            <View style={{ position: 'absolute', margin:60,  marginTop:20 }}>
             <Text style={{color:"white",fontSize:22, fontStyle:"italic"}}>{titulo}</Text>
             </View>
         </View>
