@@ -3,12 +3,12 @@ import { TouchableOpacity, View, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
-interface botomProps {
+interface addProps {
     titulo: string;
     rota: string;
   }
 
-const BotomSaude: React.FC<botomProps> = ({titulo , rota}) => {
+const BotomAdd: React.FC<addProps> = ({titulo , rota}) => {
     const navigation = useNavigation();
     const handlePress = () => {
         navigation.navigate(rota);
@@ -17,7 +17,7 @@ const BotomSaude: React.FC<botomProps> = ({titulo , rota}) => {
     <View style={{
       borderRadius: 30,
       padding: 0,
-      justifyContent: "space-between",
+      justifyContent: "center",
       margin: 4,
       shadowColor: "#000",
       shadowOffset: { width: 0, height: 2 },
@@ -27,17 +27,17 @@ const BotomSaude: React.FC<botomProps> = ({titulo , rota}) => {
       marginBottom:20,
       backgroundColor: '#0E5959',
       width: 400,
-      height: 90,
+      height: 130,
     }}>
-        <View style={{ position: 'absolute', marginLeft: 34, marginTop: 34 }}>
+        <View style={{ position: 'absolute', marginLeft: 34, marginTop: 34 }}> 
       <Text style={{color:"#d5d5d5",fontSize:18}}>{titulo}</Text>
 
     </View>
-      <TouchableOpacity onPress={handlePress} style={{ position: 'absolute', marginLeft: 340, marginTop: 35 }}>
-      <AntDesign name="rightcircleo" size={24} color="white" />
+      <TouchableOpacity onPress={handlePress} style={{ position: 'absolute', marginLeft: 340, marginTop: 35}}>
+      <AntDesign name="right" size={24} color="white" />
       </TouchableOpacity>
     </View>
   )
 }
 
-export default BotomSaude;
+export default BotomAdd;
