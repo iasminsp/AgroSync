@@ -24,7 +24,7 @@ export default function saude() {
             
             <View>
                 <SuperiorSaude titulo={"Saude"}/>
-                <View style={{ flexDirection: "row",  marginVertical: 0, justifyContent: "center", marginTop: -20  }}>
+                <View style={{ flexDirection: "row",  marginVertical: 0, justifyContent: "center", marginTop: "-3%"  }}>
                 <Text style={{color:'#1E4034',marginLeft:85 ,fontSize:20, fontStyle:"italic"}}>Previsoes do mes</Text>
                 <TouchableOpacity onPress={handlePress} >
                 <MaterialIcons name="add-circle" size={30} color="#1E4034"style={{ marginLeft:60, marginTop: 10}}/>

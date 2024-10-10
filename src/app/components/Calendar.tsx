@@ -11,18 +11,20 @@ const Calendar = () => {
     const endDay = Math.min(day + daysToSelect - 1, daysOfMonth.length);
     const weekDays = Array.from({ length: endDay - startDay + 1 }, (_, i) => startDay + i);
     setSelectedWeek(weekDays);
-  }
+  };
 
   return (
     <View
       style={{
         backgroundColor: '#1E4034',
-        padding: 35,
-        margin:10,
+        padding: '1%',
+        margin: '4%',
         borderRadius: 20,
-        marginTop: 30,
-        marginBottom: 35,
+        marginTop: '5%',
+        marginBottom: '4%',
         alignItems: 'center',
+        width: '90%',  // Ajuste da largura do calendário
+        height: '45%', // Ajuste da altura do calendário
       }}
     >
       <Text
@@ -30,7 +32,7 @@ const Calendar = () => {
           color: '#fff',
           fontSize: 20,
           fontWeight: 'bold',
-          marginBottom: 10,
+          marginBottom: '2%',
         }}
       >
         Calendário
@@ -46,11 +48,11 @@ const Calendar = () => {
           <TouchableOpacity
             key={day}
             style={{
-              width: 40,
-              height: 40,
-              margin: 5,
+              width: '15%',
+              height: '14%',
+              margin: '1%',
               borderRadius: 15,
-              backgroundColor: selectedWeek && selectedWeek.includes(day) ? '#24C0C0' : '#fff',
+              backgroundColor: selectedWeek && selectedWeek.includes(day) ? '#24C0C0' : '#1E4034',
               justifyContent: 'center',
               alignItems: 'center',
             }}
@@ -58,8 +60,8 @@ const Calendar = () => {
           >
             <Text
               style={{
-                color: '#1E4034',
-                fontSize: 16,
+                color: '#fff',
+                fontSize: 14,
                 fontWeight: 'bold',
               }}
             >
@@ -73,7 +75,7 @@ const Calendar = () => {
           style={{
             color: '#fff',
             fontSize: 16,
-            marginTop: 10,
+            marginTop: '4%',
           }}
         >
           Semana selecionada: {selectedWeek.join(', ')}
@@ -81,6 +83,6 @@ const Calendar = () => {
       )}
     </View>
   );
-}
+};
 
 export default Calendar;
