@@ -18,11 +18,12 @@ const FormularioDia: React.FC<botomProps> = ({titulo , rota}) => {
     
     <View style={{
       position: 'relative',
+      
       borderRadius: 30,
       padding: 0,
       justifyContent: "space-between",
       margin: 6,
-      marginTop: 50,
+      marginTop: 300,
       marginBottom:35,
       backgroundColor: '#0E5959',
       width: 400,
