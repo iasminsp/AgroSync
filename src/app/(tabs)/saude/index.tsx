@@ -16,7 +16,7 @@ export default function saude() {
         <View
             style={{
                 flex: 1,
-                backgroundColor: "#d7d7d7",
+                backgroundColor: "#d4d4d4",
                 
             }} 
             
