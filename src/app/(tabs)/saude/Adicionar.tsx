@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text,Image } from 'react-native';
 import BotomAdd from 'src/app/components/botaoAddSaude';
 import SuperiorCircular from 'src/app/components/tituloSaudeCircular';
 
@@ -18,6 +18,7 @@ export default function Adicionar() {
                 <SuperiorCircular titulo={'Adicionar:'}/>
                 <BotomAdd titulo={'Animais em ciclo de reproduçao'} rota={'Previsao'}/>
                 <BotomAdd titulo={'Animais em tratamento veterinario'} rota={'Doentes'}/>
+                <Image source={require("assets/vaquinha.png")} style={{position:"static", marginTop:"3%"}} />
             </View>
         </View>    
     )
