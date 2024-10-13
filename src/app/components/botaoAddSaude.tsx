@@ -28,7 +28,7 @@ const BotomAdd: React.FC<addProps> = ({ titulo, rota }) => {
       marginBottom: '5%',
       backgroundColor: '#0E5959',
       width: '90%', // Largura em % da tela
-      height: '24%', // Altura em % da tela
+      height: '20%', // Altura em % da tela
     }}>
       <View style={{ position: 'absolute', marginLeft: '8%', marginTop: '25%' }}>
         <Text style={{ color: "#d5d5d5", fontSize: 18 }}>{titulo}</Text>
