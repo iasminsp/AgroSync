@@ -1,25 +1,3 @@
-<<<<<<< HEAD
-// src/app/components/menu/VaquinhaCard.tsx
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-
-interface VaquinhaCardProps {
-    nome: string;
-    id: string;
-    onDelete: () => void;
-    onPress: () => void; // Adicionando a função onPress
-}
-
-const VaquinhaCard: React.FC<VaquinhaCardProps> = ({ nome, id, onDelete, onPress }) => {
-    return (
-        <TouchableOpacity onPress={onPress} style={styles.card}> {/* Usando TouchableOpacity para toda a área do card */}
-            <Text style={styles.nome}>{nome}</Text>
-            <TouchableOpacity onPress={onDelete} style={styles.deleteButton}>
-                <Ionicons name="trash" size={24} color="red" />
-            </TouchableOpacity>
-        </TouchableOpacity>
-=======
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; // Importando os ícones
@@ -53,28 +31,12 @@ const VaquinhaCard: React.FC<VaquinhaCardProps> = ({ nome, onDelete }) => {
                 <Text style={styles.cardText}>{displayName}</Text> {/* Texto com o nome da vaquinha */}
             </View>
         </View>
->>>>>>> 45a30080818c66e53438f5c5aad435c67d01256c
     );
 };
 
 const styles = StyleSheet.create({
     card: {
-<<<<<<< HEAD
-        padding: 10,
-        margin: 5,
-        backgroundColor: '#fff',
-        borderRadius: 8,
-        elevation: 3,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    nome: {
-        fontSize: 18,
-    },
-    deleteButton: {
-        padding: 5,
-=======
+
         backgroundColor: '#1E4034',
         borderRadius: 40,
         margin: 10,
@@ -113,7 +75,6 @@ const styles = StyleSheet.create({
         color: '#E0FFD1',
         fontSize: 18, // Tamanho da fonte do nome
         fontWeight: 'bold',
->>>>>>> 45a30080818c66e53438f5c5aad435c67d01256c
     },
 });
 
