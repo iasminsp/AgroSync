@@ -1,9 +1,15 @@
-import { Stack } from 'expo-router';
+import { Stack } from 'expo-router'
+import React from 'react'
 
-export default function MenuLayout() {
-    return (
-        <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="index" />
-        </Stack>
-    );
+const LayoutMenu = () => {
+  return (
+    <Stack>
+      <Stack.Screen 
+        name="index" 
+        options={{ headerShown: false }} 
+      />
+    </Stack>
+  )
 }
+
+export default LayoutMenu

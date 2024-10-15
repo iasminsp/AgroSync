@@ -1,7 +1,7 @@
 import { Stack } from 'expo-router'
 import React from 'react'
 
-const LayoutRelatorio = () => {
+const LayoutDespesas = () => {
   return (
     <Stack>
       <Stack.Screen 
@@ -12,4 +12,4 @@ const LayoutRelatorio = () => {
   )
 }
 
-export default LayoutRelatorio
+export default LayoutDespesas

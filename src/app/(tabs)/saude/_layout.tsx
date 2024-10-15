@@ -1,12 +1,15 @@
-import { Stack } from "expo-router";
+import { Stack } from 'expo-router'
+import React from 'react'
 
-
-export default function saudeLayout() {
-    return    (
-        <Stack screenOptions={{headerShown: false,}}>
-            <Stack.Screen name="index" />
-            <Stack.Screen name="Previsao" />
-            <Stack.Screen name="Doentes" />
-        </Stack>
-    )
+const LayoutSaude = () => {
+  return (
+    <Stack>
+      <Stack.Screen 
+        name="index" 
+        options={{ headerShown: false }} 
+      />
+    </Stack>
+  )
 }
+
+export default LayoutSaude
