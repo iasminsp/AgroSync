@@ -38,59 +38,59 @@ const Menu = () => {
   };
 
   return ( 
-  //   <View style={{ backgroundColor: '#1E4034', height: '100%', width: '100%'}}>
-  //   <Text style={{ fontSize: 40, color: '#D9D9D9', fontWeight: '700', textAlign: 'center', marginTop: '70%' }}>
-  //     Menu
-  //   </Text>
-  //   <TouchableOpacity 
-  //       onPress={() => signUp()}
-  //       style={{ 
-  //           width: 100, 
-  //           height: 50, 
-  //           borderRadius: 15, 
-  //           backgroundColor: '#1E4034', 
-  //           alignItems: 'center', 
-  //           justifyContent: 'center' 
-  //       }} 
-  //   >
-  //       <Text style={{ color: '#D9D9D9', fontWeight: 'bold', fontSize: 20 }}>Logout</Text>
-  //   </TouchableOpacity>  
-  // </View>
+    <View style={{ backgroundColor: '#1E4034', height: '100%', width: '100%'}}>
+    <Text style={{ fontSize: 40, color: '#D9D9D9', fontWeight: '700', textAlign: 'center', marginTop: '70%' }}>
+      Menu
+    </Text>
+    <TouchableOpacity 
+        onPress={() => signUp()}
+        style={{ 
+            width: 100, 
+            height: 50, 
+            borderRadius: 15, 
+            backgroundColor: '#1E4034', 
+            alignItems: 'center', 
+            justifyContent: 'center' 
+        }} 
+    >
+        <Text style={{ color: '#D9D9D9', fontWeight: 'bold', fontSize: 20 }}>Logout</Text>
+    </TouchableOpacity>  
+  </View>
     
     
-    //editar dentro do return
-    <View style={styles.container}>
-      <View style={styles.colorBar} /> {/* Barra colorida */}
-        <View style={styles.searchContainer}>
-            <Ionicons name="search" size={24} color="#1E4034" style={styles.searchIcon} />
-            <TextInput
-                style={styles.searchInput}
-                placeholder="Pesquisar vaquinhas"
-                value={searchQuery}
-                onChangeText={handleSearch}
-            />
-        </View>
+    // //editar dentro do return
+    // <View style={styles.container}>
+    //   <View style={styles.colorBar} /> {/* Barra colorida */}
+    //     <View style={styles.searchContainer}>
+    //         <Ionicons name="search" size={24} color="#1E4034" style={styles.searchIcon} />
+    //         <TextInput
+    //             style={styles.searchInput}
+    //             placeholder="Pesquisar vaquinhas"
+    //             value={searchQuery}
+    //             onChangeText={handleSearch}
+    //         />
+    //     </View>
 
-      {/* Botão de adicionar vaquinhas */}
-      <View style={styles.addButtonContainer}>
-          <TouchableOpacity style={styles.addButton}>
-              <Ionicons name="add-circle" size={50} color="#1E4034" />
-          </TouchableOpacity>
-      </View>
+    //   {/* Botão de adicionar vaquinhas */}
+    //   <View style={styles.addButtonContainer}>
+    //       <TouchableOpacity style={styles.addButton}>
+    //           <Ionicons name="add-circle" size={50} color="#1E4034" />
+    //       </TouchableOpacity>
+    //   </View>
 
-    <FlatList
-        data={filteredVaquinhas}
-        keyExtractor={item => item.id}
-        numColumns={2} // Para 2 por fileira
-        renderItem={({ item }) => (
-            <VaquinhaCard 
-                nome={item.nome} 
-                onDelete={() => handleDeleteVaquinha(item.id)} // Passando a função de exclusão
-            />
-        )}
-        contentContainerStyle={styles.flatListContainer}
-    />
-    </View>
+    // <FlatList
+    //     data={filteredVaquinhas}
+    //     keyExtractor={item => item.id}
+    //     numColumns={2} // Para 2 por fileira
+    //     renderItem={({ item }) => (
+    //         <VaquinhaCard 
+    //             nome={item.nome} 
+    //             onDelete={() => handleDeleteVaquinha(item.id)} // Passando a função de exclusão
+    //         />
+    //     )}
+    //     contentContainerStyle={styles.flatListContainer}
+    // />
+    // </View>
   )
 }
 

@@ -39,7 +39,7 @@ export default function App() {
                         {/* Parte de cima */}
                         <View style={styles.viewUp}>
                             <ImageBackground 
-                                source={require('../assets/images/SignIn/logoSemFundo.png')}
+                                source={require('../assets/login/logoSemFundo.png')}
                                 style={styles.imagemLogo}/>
                             <Text style={styles.agroSync}>
                                 AgroSync
