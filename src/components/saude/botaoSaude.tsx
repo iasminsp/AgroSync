@@ -25,7 +25,7 @@ const BotomSaude: React.FC<botomProps> = ({ titulo, rota }) => {
       shadowOpacity: 0.25,
       shadowRadius: 3.84,
       elevation: 500,
-      marginBottom: '5%',
+      marginBottom: '2%',
       backgroundColor: '#0E5959',
       width: '90%', // Largura em % da tela
       height: '12%', // Altura em % da tela
