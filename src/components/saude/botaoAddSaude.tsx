@@ -10,8 +10,10 @@ interface addProps {
 
 const BotomAdd: React.FC<addProps> = ({ titulo, rota }) => {
   const navigation = useNavigation();
+
   const handlePress = () => {
-    navigation.navigate(rota);
+    // Navega para a rota com o modal ativo
+    navigation.navigate(rota, { modalAtivo: true });
   };
 
   return (
