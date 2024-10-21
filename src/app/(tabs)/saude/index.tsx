@@ -7,7 +7,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 
 const Saude = () => {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const navigation = useNavigation();
   const rota = "Adicionar";
   const handlePress = () => {
