@@ -55,7 +55,7 @@ export default function Doentes() {
             <MaterialIcons name="add-circle" size={30} color="#1E4034"style={{ marginLeft:"85%", marginTop: 10}}/>
             </TouchableOpacity>
 
-            <ScrollView>
+            <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
             {/* Renderiza os cartões dinamicamente */}
             {cards.map((card, index) => (
             <CardSaude 

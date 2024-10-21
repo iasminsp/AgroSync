@@ -14,7 +14,7 @@ const CardSaude: React.FC<CardProps> = ({ titulo, descricao, selectedDate, onDat
   const [showDetails, setShowDetails] = useState(false);
 
   const handleDateSelection = () => {
-    const date = new Date(); // Lógica para escolher uma data, pode ser do Modal ou outra função
+    const date = new Date();
     onDateSelected(date);
   };
 
@@ -29,18 +29,18 @@ const CardSaude: React.FC<CardProps> = ({ titulo, descricao, selectedDate, onDat
       <View
         style={{
           borderRadius: 12,
-          justifyContent:"space-between",
-          padding: '1%',
-          margin: '3%',
-          shadowColor: '#000',
+          justifyContent: "space-between",
+          padding: 10, 
+          margin: 25, 
+          shadowColor: "#000",
           shadowOffset: { width: 0, height: 2 },
           shadowOpacity: 0.25,
           shadowRadius: 3.84,
           elevation: 5,
-          marginBottom: '1%',
-          backgroundColor: '#1E4034',
-          width: '90%', // Ajuste da largura em porcentagem
-          height: showDetails ? '92%' : '89%', // Ajuste da altura com porcentagem condicional
+          backgroundColor: "#1E4034",
+          width: '90%',
+          minHeight: "80%", // Define uma altura mínima para os cartões
+          maxHeight: showDetails ? 140 : 120, // Controla a altura com base no estado showDetails
         }}
       >
          <View style={{ position: 'absolute', left: '50%', top: '30%' }}>
