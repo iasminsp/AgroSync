@@ -23,7 +23,7 @@ const Calendar: React.FC<CalendarProps> = ({ selectedDate }) => {
   }, [currentMonth, currentYear]);
 
   useEffect(() => {
-    if (selectedDate) {
+    if (selectedDate) { // Apenas executa se selectedDate não for null
       // Adiciona 3 meses à data selecionada
       const futureDate = new Date(selectedDate);
       futureDate.setMonth(futureDate.getMonth() + 3);
@@ -33,6 +33,8 @@ const Calendar: React.FC<CalendarProps> = ({ selectedDate }) => {
       const endDay = Math.min(startDay + 6, daysOfMonth.length);
       const weekDays = Array.from({ length: endDay - startDay + 1 }, (_, i) => startDay + i);
       setHighlightedWeek(weekDays);
+    } else {
+      setHighlightedWeek(null); // Limpa a semana destacada se não houver data selecionada
     }
   }, [selectedDate, daysOfMonth]);
 
