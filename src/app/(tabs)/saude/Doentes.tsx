@@ -7,7 +7,7 @@ import TituloPD from '../../../components/saude/TituloPD';
 import ModalAdd from '@/src/components/saude/modalAdd';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '@/firebase/firebaseConfig';
 
 interface Card {
@@ -44,6 +44,16 @@ export default function Doentes() {
           alert("All fields are required!");
         }
       };
+
+      const deleteCard = async (id: string) => {
+        try {
+          await deleteDoc(doc(db, "tratamentos", id));
+          setCards(cards.filter(card => card.id !== id));
+          console.log("Document deleted with ID: ", id);
+        } catch (error) {
+          console.error("Error deleting document: ", error);
+        }
+      };
     return (
         <View
             style={{
@@ -68,7 +78,8 @@ export default function Doentes() {
                 descricao={card.descricao}
                 selectedDate={new Date()} // Passe a data se necessário
                 onDateSelected={(date) => console.log('Data selecionada:', date)} // Função para lidar com a seleção de data
-                id={card.id}            />
+                id={card.id}       
+                deleteCard={deleteCard}/>
             ))}
             </ScrollView>
             {/* Modal para adicionar o card */}

@@ -6,7 +6,7 @@ import SuperiorPD from '../../../components/saude/superiorPD';
 import TituloPD from '../../../components/saude/TituloPD';
 import ModalAdd from '../../../components/saude/modalAdd';
 import { MaterialIcons } from '@expo/vector-icons';
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc } from 'firebase/firestore';
 import {db} from "../../../../firebase/firebaseConfig.js";
 
 interface Card {
@@ -35,10 +35,19 @@ export default function Previsao() {
     }
   };
 
+  const deleteCard = async (id: string) => {
+    try {
+      await deleteDoc(doc(db, "previsao", id));
+      setCards(cards.filter(card => card.id !== id));
+      console.log("Document deleted with ID: ", id);
+    } catch (error) {
+      console.error("Error deleting document: ", error);
+    }
+  };
   return (
     <View style={{ flex: 1, backgroundColor: "#d7d7d7" }}>
       <View>
-        <SuperiorPD />
+        <SuperiorPD  />
         <TituloPD titulo={'Ciclo Reprodutivo'} />
 
         <TouchableOpacity onPress={() => setModalVisible(true)}>
@@ -55,7 +64,7 @@ export default function Previsao() {
                 descricao={card.descricao} 
                 selectedDate={new Date()} // Passe a data se necessário
                 onDateSelected={(date) => console.log('Data selecionada:', date)} // Função para lidar com a seleção de data
-            />
+                deleteCard={deleteCard}/>
             ))}
 
         </ScrollView>
