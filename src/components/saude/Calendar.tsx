@@ -15,6 +15,7 @@ const Calendar: React.FC<CalendarProps> = ({ selectedDate }) => {
     // Função para calcular os dias do mês atual
     const calculateDaysInMonth = (month: number, year: number) => {
       const daysInMonth = new Date(year, month + 1, 0).getDate(); // Último dia do mês
+      console.log('teste')
       return Array.from({ length: daysInMonth }, (_, i) => i + 1);
     };
 

@@ -7,9 +7,12 @@ import TituloPD from '../../../components/saude/TituloPD';
 import ModalAdd from '@/src/components/saude/modalAdd';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
+import { addDoc, collection } from 'firebase/firestore';
+import { db } from '@/firebase/firebaseConfig';
 
 interface Card {
     id: string;
+    titulo:string;
     descricao: string;
     data: string;
   }
@@ -28,16 +31,17 @@ export default function Doentes() {
       }, [route.params]);
     
       // Função para adicionar um novo card
-      const adicionarCard = (id: string, descricao: string, data: string) => {
-        const novoCartao: Card = { id, descricao, data };
-        setCards((prevCards) => [...prevCards, novoCartao]);
-      };
-    
-      const salvarVaca = () => {
-        if (novoCard) {
-          adicionarCard(novoCard.id, novoCard.descricao, novoCard.data);
-          setModalVisible(false); 
-          setNovoCard(null); 
+      const addCard = async (titulo: string, descricao: string, data: string) => {
+        if (titulo && data && descricao) {
+          try {
+            const docRef = await addDoc(collection(db, "tratamentos"), { titulo, descricao, data });
+            setCards([...cards, { id: docRef.id, titulo, descricao, data }]);
+            setModalVisible(false);
+          } catch (error) {
+            console.error("Error adding document: ", error );
+          }
+        } else {
+          alert("All fields are required!");
         }
       };
     return (
@@ -59,12 +63,12 @@ export default function Doentes() {
             {/* Renderiza os cartões dinamicamente */}
             {cards.map((card, index) => (
             <CardSaude 
-                key={index} 
-                titulo={card.id} 
-                descricao={card.descricao} 
+                key={index}
+                titulo={card.titulo}
+                descricao={card.descricao}
                 selectedDate={new Date()} // Passe a data se necessário
                 onDateSelected={(date) => console.log('Data selecionada:', date)} // Função para lidar com a seleção de data
-            />
+                id={card.id}            />
             ))}
             </ScrollView>
             {/* Modal para adicionar o card */}
@@ -87,10 +91,7 @@ export default function Doentes() {
               padding: 20,
               alignItems: 'center',
             }}>
-              <ModalAdd 
-                onInputChange={(id, descricao, data) => setNovoCard({ id, descricao, data })} 
-                salvarVaca={salvarVaca} 
-              />
+              <ModalAdd addCard={addCard} closeModal={() => setModalVisible(false)} />
             </View>
           </View>
         </Modal>
