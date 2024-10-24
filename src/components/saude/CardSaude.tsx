@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Calendar from './Calendar';
+import { Feather, MaterialIcons } from '@expo/vector-icons';
 
 interface CardProps {
   id:string;
@@ -9,10 +10,12 @@ interface CardProps {
   descricao: string;
   selectedDate: Date | null;
   onDateSelected: (date: Date) => void;
+  deleteCard: (id: string) => void;
 }
 
-const CardSaude: React.FC<CardProps> = ({ titulo, descricao, selectedDate, onDateSelected }) => {
+const CardSaude: React.FC<CardProps> = ({ titulo, descricao, selectedDate, onDateSelected, deleteCard }) => {
   const [showDetails, setShowDetails] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const handleDateSelection = () => {
     const date = new Date();
@@ -44,6 +47,14 @@ const CardSaude: React.FC<CardProps> = ({ titulo, descricao, selectedDate, onDat
           maxHeight: showDetails ? 140 : 120, // Controla a altura com base no estado showDetails
         }}
       >
+        <View style={{flexDirection: 'row', justifyContent: 'space-between', width: '100%', paddingHorizontal: 10}}>
+                <TouchableOpacity onPress={() => deleteCard(id)}>
+                    <MaterialIcons name="delete-outline" size={20} color='#0E5959' />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setModalVisible(true)}>
+                    <Feather name="edit-2" size={20} color='#0E5959' />
+                </TouchableOpacity>
+                </View>
          <View style={{ position: 'absolute', left: '50%', top: '30%' }}>
           <Text style={{ color: '#d5d5d5', fontSize: 18 }}>{titulo}</Text>
         </View>
