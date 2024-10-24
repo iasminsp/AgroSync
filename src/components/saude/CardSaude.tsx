@@ -4,6 +4,7 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Calendar from './Calendar';
 
 interface CardProps {
+  id:string;
   titulo: string;
   descricao: string;
   selectedDate: Date | null;

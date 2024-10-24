@@ -6,37 +6,32 @@ import SuperiorPD from '../../../components/saude/superiorPD';
 import TituloPD from '../../../components/saude/TituloPD';
 import ModalAdd from '../../../components/saude/modalAdd';
 import { MaterialIcons } from '@expo/vector-icons';
+import { addDoc, collection } from 'firebase/firestore';
+import {db} from "../../../../firebase/firebaseConfig.js";
 
 interface Card {
-  id: string;
+  id:string;
+  titulo: string;
   descricao: string;
   data: string;
 }
 
 export default function Previsao() {
-  const route = useRoute();
   const [modalVisible, setModalVisible] = useState(false);
-  const [cards, setCards] = useState<Card[]>([]); // Estado para armazenar os cartões
-  const [novoCard, setNovoCard] = useState<Card | null>(null); // Estado para armazenar temporariamente o card adicionado
+  const [cards, setCards] = useState<Card[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
-  useEffect(() => {
-    if (route.params?.modalAtivo) {
-      setModalVisible(true);
-    }
-  }, [route.params]);
-
-  // Função para adicionar um novo card
-  const adicionarCard = (id: string, descricao: string, data: string) => {
-    const novoCartao: Card = { id, descricao, data };
-    setCards((prevCards) => [...prevCards, novoCartao]);
-  };
-
-  const salvarVaca = () => {
-    if (novoCard) {
-      adicionarCard(novoCard.id, novoCard.descricao, novoCard.data); // Adiciona o novo card à lista de cartões
-      setModalVisible(false); // Fecha o modal após salvar
-      setNovoCard(null); // Limpa o estado do novo card
+  const addCard = async (titulo: string, descricao: string, data: string) => {
+    if (titulo && data && descricao) {
+      try {
+        const docRef = await addDoc(collection(db, "previsao"), { titulo, descricao, data });
+        setCards([...cards, { id: docRef.id, titulo, descricao, data }]);
+        setModalVisible(false);
+      } catch (error) {
+        console.error("Error adding document: ", error );
+      }
+    } else {
+      alert("All fields are required!");
     }
   };
 
@@ -54,8 +49,9 @@ export default function Previsao() {
           {/* Renderiza os cartões dinamicamente */}
           {cards.map((card, index) => (
             <CardSaude 
-                key={index} 
-                titulo={card.id} 
+                key={index}
+                id={card.id} 
+                titulo={card.titulo} 
                 descricao={card.descricao} 
                 selectedDate={new Date()} // Passe a data se necessário
                 onDateSelected={(date) => console.log('Data selecionada:', date)} // Função para lidar com a seleção de data
@@ -84,10 +80,7 @@ export default function Previsao() {
               padding: 20,
               alignItems: 'center',
             }}>
-              <ModalAdd 
-                onInputChange={(id, descricao, data) => setNovoCard({ id, descricao, data })} 
-                salvarVaca={salvarVaca} 
-              />
+              <ModalAdd addCard={addCard} closeModal={() => setModalVisible(false)} />
             </View>
           </View>
         </Modal>
