@@ -6,11 +6,11 @@ import SuperiorPD from '../../../components/saude/superiorPD';
 import TituloPD from '../../../components/saude/TituloPD';
 import ModalAdd from '../../../components/saude/modalAdd';
 import { MaterialIcons } from '@expo/vector-icons';
-import { addDoc, collection, deleteDoc, doc } from 'firebase/firestore';
-import {db} from "../../../../firebase/firebaseConfig.js";
+import { addDoc, collection, deleteDoc, doc, onSnapshot } from 'firebase/firestore';
+import { db } from "../../../../firebase/firebaseConfig.js";
 
 interface Card {
-  id:string;
+  id: string;
   titulo: string;
   descricao: string;
   data: string;
@@ -25,33 +25,45 @@ export default function Previsao() {
     if (titulo && data && descricao) {
       try {
         const docRef = await addDoc(collection(db, "previsao"), { titulo, descricao, data });
-        setCards([...cards, { id: docRef.id, titulo, descricao, data }]);
         setModalVisible(false);
       } catch (error) {
-        console.error("Error adding document: ", error );
+        console.error("Erro ao adicionar documento: ", error);
       }
     } else {
-      alert("All fields are required!");
+      alert("Todos os campos são obrigatórios!");
     }
   };
 
   const deleteCard = async (id: string) => {
     try {
       await deleteDoc(doc(db, "previsao", id));
-      setCards(cards.filter(card => card.id !== id));
-      console.log("Document deleted with ID: ", id);
+      console.log("Documento excluído com ID: ", id);
     } catch (error) {
-      console.error("Error deleting document: ", error);
+      console.error("Erro ao excluir documento: ", error);
     }
   };
+
+  // UseEffect para buscar dados ao carregar a tela
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "previsao"), (snapshot) => {
+      const cardsData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Card[];
+      setCards(cardsData);
+    });
+
+    return () => unsubscribe(); // Limpa a escuta ao desmontar o componente
+  }, []);
+
   return (
     <View style={{ flex: 1, backgroundColor: "#d7d7d7" }}>
       <View>
-        <SuperiorPD  />
+        <SuperiorPD />
         <TituloPD titulo={'Ciclo Reprodutivo'} />
 
         <TouchableOpacity onPress={() => setModalVisible(true)}>
-        <MaterialIcons name="add-circle" size={30} color="#1E4034"style={{ marginLeft:"85%", marginTop: 10}}/>
+          <MaterialIcons name="add-circle" size={30} color="#1E4034" style={{ marginLeft: "85%", marginTop: 10 }} />
         </TouchableOpacity>
         
         <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
@@ -65,8 +77,7 @@ export default function Previsao() {
                 selectedDate={new Date()} // Passe a data se necessário
                 onDateSelected={(date) => console.log('Data selecionada:', date)} // Função para lidar com a seleção de data
                 deleteCard={deleteCard}/>
-            ))}
-
+          ))}
         </ScrollView>
 
         {/* Modal para adicionar o card */}
