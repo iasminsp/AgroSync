@@ -23,7 +23,7 @@ const Saude = () => {
         <SuperiorSaude titulo={"Saude"}/>
         <View style={{ flexDirection: "row",  marginVertical: 0, justifyContent: "center", marginTop: "-3%"  }}>
         <TouchableOpacity onPress={() => setModalVisible(true)}>
-        <AntDesign name="filter" size={35} color="#1E4034"style={{ marginLeft:-80, marginTop: 5}}/>
+          <AntDesign name="filter" size={35} color="#1E4034"style={{ marginLeft:-80, marginTop: 5}}/>
         </TouchableOpacity>
         <Text style={{color:'#1E4034' ,fontSize:20,alignContent: "center", fontStyle:"italic"}}>Previsoes do mes</Text>
         </View>

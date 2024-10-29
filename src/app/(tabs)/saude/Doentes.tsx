@@ -1,59 +1,60 @@
-// doentes.tsx
-import React, { useEffect, useState } from 'react';
-import { View, Text, Modal, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Modal, ScrollView, TouchableOpacity } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import CardSaude from '../../../components/saude/CardSaude';
 import SuperiorPD from '../../../components/saude/superiorPD';
 import TituloPD from '../../../components/saude/TituloPD';
-import ModalAdd from '@/src/components/saude/modalAdd';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import ModalAdd from '../../../components/saude/modalAdd';
 import { MaterialIcons } from '@expo/vector-icons';
-import { addDoc, collection, deleteDoc, doc } from 'firebase/firestore';
-import { db } from '@/firebase/firebaseConfig';
+import { addDoc, collection, deleteDoc, doc, onSnapshot } from 'firebase/firestore';
+import { db } from "../../../../firebase/firebaseConfig.js";
 
 interface Card {
-    id: string;
-    titulo:string;
-    descricao: string;
-    data: string;
-  }
+  id: string;
+  titulo: string;
+  descricao: string;
+  data: string;
+}
 
 export default function Doentes() {
-    const route = useRoute();
-    const [modalVisible, setModalVisible] = useState(false);
-    const [cards, setCards] = useState<Card[]>([]);
-    const [novoCard, setNovoCard] = useState<Card | null>(null);
-    const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
-
-    useEffect(() => {
-        if (route.params?.modalAtivo) {
-          setModalVisible(true);
-        }
-      }, [route.params]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [cards, setCards] = useState<Card[]>([]);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
     
       // Função para adicionar um novo card
       const addCard = async (titulo: string, descricao: string, data: string) => {
         if (titulo && data && descricao) {
           try {
             const docRef = await addDoc(collection(db, "tratamentos"), { titulo, descricao, data });
-            setCards([...cards, { id: docRef.id, titulo, descricao, data }]);
             setModalVisible(false);
           } catch (error) {
-            console.error("Error adding document: ", error );
+            console.error("Erro ao adicionar documento: ", error);
           }
         } else {
-          alert("All fields are required!");
+          alert("Todos os campos são obrigatórios!");
         }
       };
-
+    
       const deleteCard = async (id: string) => {
         try {
           await deleteDoc(doc(db, "tratamentos", id));
-          setCards(cards.filter(card => card.id !== id));
-          console.log("Document deleted with ID: ", id);
+          console.log("Documento excluído com ID: ", id);
         } catch (error) {
-          console.error("Error deleting document: ", error);
+          console.error("Erro ao excluir documento: ", error);
         }
       };
+
+      useEffect(() => {
+        const unsubscribe = onSnapshot(collection(db, "tratamentos"), (snapshot) => {
+          const cardsData = snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+          })) as Card[];
+          setCards(cardsData);
+        });
+    
+        return () => unsubscribe(); // Limpa a escuta ao desmontar o componente
+      }, []);
     return (
         <View
             style={{
