@@ -19,7 +19,7 @@ interface Card {
 export default function Previsao() {
   const [modalVisible, setModalVisible] = useState(false);
   const [cards, setCards] = useState<Card[]>([]);
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const addCard = async (titulo: string, descricao: string, data: string) => {
     if (titulo && data && descricao) {
@@ -37,6 +37,7 @@ export default function Previsao() {
   const deleteCard = async (id: string) => {
     try {
       await deleteDoc(doc(db, "previsao", id));
+      setCards(cards.filter(card => card.id !== id));
       console.log("Documento excluído com ID: ", id);
     } catch (error) {
       console.error("Erro ao excluir documento: ", error);
@@ -100,7 +101,7 @@ export default function Previsao() {
               padding: 20,
               alignItems: 'center',
             }}>
-              <ModalAdd addCard={addCard} closeModal={() => setModalVisible(false)} />
+              <ModalAdd addCard={addCard} closeModal={() => setModalVisible(false)} onDateSelected={setSelectedDate}/>
             </View>
           </View>
         </Modal>

@@ -6,14 +6,21 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 interface Props {
   addCard: (Titulo: string, descricao: string, data: string) => void;
   closeModal: () => void;
+  onDateSelected: (date: Date) => void; // Nova propriedade para selecionar data
 }
 
-export default function ModalAdd({ addCard, closeModal }: Props) {
+export default function ModalAdd({ addCard, closeModal, onDateSelected }: Props) {
   const [date, setDate] = useState(new Date());
-  const [show, setShow] = useState(false);
   const [descricao, setDescricao] = useState('');
   const [titulo, setTitulo] = useState('');
+  const [show, setShow] = useState(false); 
 
+  const handleSalvar = () => {
+    const formattedDate = date.toLocaleDateString();
+    addCard(titulo, descricao, formattedDate);
+    onDateSelected(date);  // Passa a data para o componente Saude
+    closeModal(); // Fecha o modal
+  };
   const onChange = (event: any, selectedDate?: Date) => {
     const currentDate = selectedDate || date;
     setShow(Platform.OS === 'ios');
@@ -22,13 +29,6 @@ export default function ModalAdd({ addCard, closeModal }: Props) {
 
   const showDatepicker = () => {
     setShow(true);
-  };
-
-  const handleSalvar = () => {
-    // Format the date as a string for Firestore
-    const formattedDate = date.toLocaleDateString();
-    addCard(titulo, descricao, formattedDate);
-    closeModal(); // Close the modal after saving
   };
 
   return (
@@ -48,11 +48,16 @@ export default function ModalAdd({ addCard, closeModal }: Props) {
       width: '95%',
       height: '80%',
     }}>
-      <Text style={{ color: "white", fontSize: 16, fontStyle: 'italic', marginBottom: 30 }}>Escolha uma Data</Text>
+
+        <TouchableOpacity onPress={closeModal}>
+          <MaterialIcons name="arrow-back" size={22} color='#10A4EE' style={{ marginRight: '75%', marginTop: 2 }}/>
+        </TouchableOpacity>
+
+      <Text style={{ color: "white", fontSize: 16, fontStyle: 'italic', marginBottom: 10 }}>Escolha uma Data</Text>
 
       {/* Botão para abrir o DatePicker */}
       <TouchableOpacity onPress={showDatepicker}>
-        <Text>{date.toLocaleDateString()}</Text>
+        <Text style={{ color: "white", fontSize: 16, fontStyle: 'italic', marginBottom: 30 }}>{date.toLocaleDateString()}</Text>
       </TouchableOpacity>
       {show && (
         <DateTimePicker 
@@ -72,7 +77,7 @@ export default function ModalAdd({ addCard, closeModal }: Props) {
           paddingHorizontal: 1,
           justifyContent: 'center',
           alignItems: 'center',
-          marginBottom: 2,
+          marginBottom: 18,
         }}
         placeholder="ID vaca.."
         placeholderTextColor="black"
@@ -80,7 +85,7 @@ export default function ModalAdd({ addCard, closeModal }: Props) {
         onChangeText={setTitulo}
       />
 
-      <Text style={{ color: "white", fontSize: 16, fontStyle: 'italic', marginBottom: 30 }}>Descrição</Text>
+      <Text style={{ color: "white", fontSize: 16, fontStyle: 'italic', marginBottom: 20 }}>Descrição</Text>
       <TextInput
         style={{
           width: '80%',
@@ -99,8 +104,8 @@ export default function ModalAdd({ addCard, closeModal }: Props) {
       />
 
       {/* Botão para salvar */}
-      <TouchableOpacity onPress={handleSalvar} style={{ marginTop: "45%", marginLeft: "70%" }}>
-        <MaterialIcons name="check" size={24} color="black" />
+      <TouchableOpacity onPress={handleSalvar} style={{ marginTop: "25%", marginLeft: "70%" }}>
+        <MaterialIcons name="check" size={24} color='#10A4EE' />
       </TouchableOpacity>
     </View>
   );
