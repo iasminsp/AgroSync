@@ -13,7 +13,7 @@ interface CardProps {
   deleteCard: (id: string) => void;
 }
 
-const CardSaude: React.FC<CardProps> = ({ titulo, descricao, selectedDate, onDateSelected, deleteCard }) => {
+const CardSaude: React.FC<CardProps> = ({id, titulo, descricao, selectedDate, onDateSelected, deleteCard }) => {
   const [showDetails, setShowDetails] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -49,10 +49,10 @@ const CardSaude: React.FC<CardProps> = ({ titulo, descricao, selectedDate, onDat
       >
         <View style={{flexDirection: 'row', justifyContent: 'space-between', width: '100%', paddingHorizontal: 10}}>
                 <TouchableOpacity onPress={() => deleteCard(id)}>
-                    <MaterialIcons name="delete-outline" size={20} color='#0E5959' />
+                    <MaterialIcons name="delete-outline" size={20} color='#10A4EE' />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => setModalVisible(true)}>
-                    <Feather name="edit-2" size={20} color='#0E5959' />
+                    <Feather name="edit-2" size={20} color='#10A4EE' />
                 </TouchableOpacity>
                 </View>
          <View style={{ position: 'absolute', left: '50%', top: '30%' }}>
@@ -63,7 +63,7 @@ const CardSaude: React.FC<CardProps> = ({ titulo, descricao, selectedDate, onDat
             <Text style={{ color: '#d5d5d5', fontSize: 14 }}>{descricao}</Text>
           </View>
         )}
-        <View style={{ marginLeft: '5%', marginTop: '4%' }}>
+        <View style={{ marginLeft: '4%', marginTop: '5%' }}>
           <FontAwesome6 name="cow" size={60} color="white" />
         </View>
       </View>

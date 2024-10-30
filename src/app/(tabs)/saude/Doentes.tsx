@@ -38,6 +38,7 @@ export default function Doentes() {
       const deleteCard = async (id: string) => {
         try {
           await deleteDoc(doc(db, "tratamentos", id));
+          setCards(cards.filter(card => card.id !== id));
           console.log("Documento excluído com ID: ", id);
         } catch (error) {
           console.error("Erro ao excluir documento: ", error);
@@ -103,7 +104,7 @@ export default function Doentes() {
               padding: 20,
               alignItems: 'center',
             }}>
-              <ModalAdd addCard={addCard} closeModal={() => setModalVisible(false)} />
+              <ModalAdd addCard={addCard} closeModal={() => setModalVisible(false)} onDateSelected={setSelectedDate}/>
             </View>
           </View>
         </Modal>

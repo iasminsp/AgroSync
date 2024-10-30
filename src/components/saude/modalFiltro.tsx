@@ -38,7 +38,11 @@ export default function Modalfiltro({closeModal }: Props) {
     }}>
       <SuperiorModal titulo={"filtro"}></SuperiorModal> 
 
-      <Text style={{ color: "black", fontSize: 16, fontStyle: 'italic', marginBottom: 20 }}>ID da Vaca</Text>
+      <TouchableOpacity onPress={closeModal}>
+          <MaterialIcons name="arrow-back" size={22} color='#10A4EE' style={{ marginLeft: '75%' }}/>
+      </TouchableOpacity>
+
+      <Text style={{ color: "black", fontSize: 16, fontStyle: 'italic', marginBottom: 10 }}>ID da Vaca</Text>
       <TextInput
         style={{
           width: '80%',
@@ -75,7 +79,7 @@ export default function Modalfiltro({closeModal }: Props) {
       />
 
       {/* Botão para salvar */}
-      <TouchableOpacity onPress={handleSalvar} style={{ marginTop: "30%", marginLeft: "70%", marginBottom:"6%" }}>
+      <TouchableOpacity onPress={handleSalvar} style={{ marginTop: "23%", marginLeft: "70%", marginBottom:"8%" }}>
         <MaterialIcons name="check" size={24} color="black" />
       </TouchableOpacity>
     </View>
