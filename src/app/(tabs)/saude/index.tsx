@@ -6,6 +6,7 @@ import BotomSaude from '@/src/components/saude/botaoSaude'
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native'
 import Modalfiltro from '@/src/components/saude/modalFiltro'
+import CalendarAgenda from '@/src/components/saude/Calendar'
 
 const Saude = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -27,7 +28,7 @@ const Saude = () => {
         </TouchableOpacity>
         <Text style={{color:'#1E4034' ,fontSize:20,alignContent: "center", fontStyle:"italic"}}>Previsoes do mes</Text>
         </View>
-        <Calendar selectedDate={selectedDate} /> 
+        <CalendarAgenda/> 
         <BotomSaude titulo={"previsao"} rota={"Previsao"}/>
         <BotomSaude titulo={"doentes"} rota={"Doentes"}/>
 
