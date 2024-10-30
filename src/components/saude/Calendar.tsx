@@ -1,62 +1,41 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Modal, TouchableOpacity, FlatList } from 'react-native';
+import { Calendar } from 'react-native-calendars';
 
-interface CalendarProps {
-  selectedDate?: Date | null; // Tornando a propriedade opcional
+interface Event {
+  id: string;
+  title: string;
+  description: string;
+  date: string;
 }
 
-const Calendar: React.FC<CalendarProps> = ({ selectedDate }) => {
-  const [highlightedWeek, setHighlightedWeek] = useState<number[] | null>(null);
-  const [currentMonth, setCurrentMonth] = useState<number>(new Date().getMonth());
-  const [currentYear, setCurrentYear] = useState<number>(new Date().getFullYear());
-  const [daysOfMonth, setDaysOfMonth] = useState<number[]>([]);
+const CalendarAgenda: React.FC = () => {
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [events, setEvents] = useState<Event[]>([
+    { id: '1', title: 'Reunião', description: 'Discussão de projeto', date: '2024-11-15' },
+    { id: '2', title: 'Consulta médica', description: 'Consulta geral', date: '2024-11-20' },
+  ]);
+  const [modalVisible, setModalVisible] = useState(false);
 
-  useEffect(() => {
-    // Função para calcular os dias do mês atual
-    const calculateDaysInMonth = (month: number, year: number) => {
-      const daysInMonth = new Date(year, month + 1, 0).getDate(); // Último dia do mês
-      console.log('teste')
-      return Array.from({ length: daysInMonth }, (_, i) => i + 1);
-    };
-
-    // Atualiza os dias do mês
-    setDaysOfMonth(calculateDaysInMonth(currentMonth, currentYear));
-  }, [currentMonth, currentYear]);
-
-  useEffect(() => {
-    if (selectedDate) { // Apenas executa se selectedDate não for null
-      // Adiciona 3 meses à data selecionada
-      const futureDate = new Date(selectedDate);
-      futureDate.setMonth(futureDate.getMonth() + 3);
-      
-      // Calcula a semana a partir dessa data futura
-      const startDay = futureDate.getDate();
-      const endDay = Math.min(startDay + 6, daysOfMonth.length);
-      const weekDays = Array.from({ length: endDay - startDay + 1 }, (_, i) => startDay + i);
-      setHighlightedWeek(weekDays);
-    } else {
-      setHighlightedWeek(null); // Limpa a semana destacada se não houver data selecionada
-    }
-  }, [selectedDate, daysOfMonth]);
-
-  // Funções para navegar entre meses
-  const goToNextMonth = () => {
-    if (currentMonth === 11) { // Se for dezembro
-      setCurrentMonth(0); // Volta para janeiro
-      setCurrentYear(currentYear + 1); // Aumenta o ano
-    } else {
-      setCurrentMonth(currentMonth + 1);
-    }
+  const handleDayPress = (day: any) => {
+    setSelectedDate(day.dateString);
+    setModalVisible(true);
   };
 
-  const goToPreviousMonth = () => {
-    if (currentMonth === 0) { // Se for janeiro
-      setCurrentMonth(11); // Volta para dezembro
-      setCurrentYear(currentYear - 1); // Diminui o ano
-    } else {
-      setCurrentMonth(currentMonth - 1);
-    }
-  };
+  const renderEventItem = ({ item }: { item: Event }) => (
+    <View
+      style={{
+        marginBottom: 10,
+        padding: 15,
+        backgroundColor: '#24C0C0',
+        borderRadius: 8,
+        width: '100%',
+      }}
+    >
+      <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#fff' }}>{item.title}</Text>
+      <Text style={{ fontSize: 14, color: '#fff' }}>{item.description}</Text>
+    </View>
+  );
 
   return (
     <View
@@ -68,48 +47,75 @@ const Calendar: React.FC<CalendarProps> = ({ selectedDate }) => {
         marginTop: '5%',
         marginBottom: '4%',
         alignItems: 'center',
-        width: '92%',  // Ajuste da largura do calendário
-        height: '46%', // Ajuste da altura do calendário
+        width: '92%',
+        height: '46%',
       }}
     >
-      <Text style={{ color: '#fff', fontSize: 20, fontWeight: 'bold', marginBottom: '5%' }}>
-        Calendário - {currentMonth + 1}/{currentYear}
+      <Text
+        style={{
+          color: '#fff',
+          fontSize: 20,
+          fontWeight: 'bold',
+          marginBottom: '5%',
+        }}
+      >
+        Calendário - {new Date().getMonth() + 1}/{new Date().getFullYear()}
       </Text>
-      
-      <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-        <TouchableOpacity onPress={goToPreviousMonth} style={{ marginRight: 10 }}>
-          <Text style={{ color: '#24C0C0', fontSize: 16 }}>Anterior</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={goToNextMonth}>
-          <Text style={{ color: '#24C0C0', fontSize: 16 }}>Próximo</Text>
-        </TouchableOpacity>
-      </View>
 
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
-        {daysOfMonth.map((day) => (
+      <Calendar
+        onDayPress={handleDayPress}
+        markedDates={{
+          [selectedDate || '']: { selected: true, marked: true, selectedColor: '#24C0C0' },
+        }}
+        theme={{
+          calendarBackground: '#1E4034',
+          textSectionTitleColor: '#fff',
+          selectedDayBackgroundColor: '#24C0C0',
+          selectedDayTextColor: '#fff',
+          todayTextColor: '#24C0C0',
+          dayTextColor: '#fff',
+          textDisabledColor: '#2d4150',
+          arrowColor: '#24C0C0',
+          monthTextColor: '#fff',
+          indicatorColor: '#fff',
+        }}
+        style={{ width: '100%', height: '60%', marginBottom: 10 }}
+      />
+
+      <Modal visible={modalVisible} animationType="slide" onRequestClose={() => setModalVisible(false)}>
+        <View
+          style={{
+            flex: 1,
+            padding: 20,
+            backgroundColor: '#1E4034',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Text style={{ fontSize: 18, color: '#fff', marginBottom: 20 }}>Eventos de {selectedDate}</Text>
+
+          <FlatList
+            data={events.filter(event => event.date === selectedDate)}
+            renderItem={renderEventItem}
+            keyExtractor={(item) => item.id}
+            ListEmptyComponent={<Text style={{ color: '#fff' }}>Sem eventos para esta data.</Text>}
+          />
+
           <TouchableOpacity
-            key={day}
             style={{
-              width: '12%',
-              height: '18%',
-              margin: '1%',
-              borderRadius: 15,
-              backgroundColor: highlightedWeek && highlightedWeek.includes(day) ? '#24C0C0' : '#1E4034',
-              justifyContent: 'center',
-              alignItems: 'center',
+              marginTop: 20,
+              padding: 10,
+              backgroundColor: '#24C0C0',
+              borderRadius: 8,
             }}
+            onPress={() => setModalVisible(false)}
           >
-            <Text style={{ color: '#fff', fontSize: 14, fontWeight: 'bold' }}>{day}</Text>
+            <Text style={{ color: '#fff', fontWeight: 'bold' }}>Fechar</Text>
           </TouchableOpacity>
-        ))}
-      </View>
-      {highlightedWeek && (
-        <Text style={{ color: '#fff', fontSize: 16, marginTop: '4%' }}>
-          Semana em destaque: {highlightedWeek.join(', ')}
-        </Text>
-      )}
+        </View>
+      </Modal>
     </View>
   );
-}
+};
 
-export default Calendar;
+export default CalendarAgenda;
