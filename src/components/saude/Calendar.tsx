@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Modal, TouchableOpacity, FlatList } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 
@@ -42,6 +42,15 @@ const CalendarAgenda: React.FC = () => {
     acc[event.date] = { marked: true, dotColor: '#24C0C0' };
     return acc;
   }, {} as Record<string, any>);
+  //const [marked, setMarked] = useState({});
+  //useEffect(() => {
+  //  const newMarkedDates = {};
+  //  events.forEach((item) => {
+  //    newMarkedDates[item.date] = { marked: true, dotColor: '#000' };
+  //  });
+  //  setMarked(newMarkedDates);
+  //}, [events]);
+  console.log(markedDates);
 
   // Adiciona a data selecionada com destaque
   if (selectedDate) {
@@ -76,6 +85,7 @@ const CalendarAgenda: React.FC = () => {
       <Calendar
         onDayPress={handleDayPress}
         markedDates={markedDates}
+        //markedDates={marked}
         theme={{
           calendarBackground: '#1E4034',
           textSectionTitleColor: '#fff',
