@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import Calendar from './Calendar';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 
 interface CardProps {
-  id:string;
+  id: string;
   titulo: string;
   descricao: string;
   selectedDate: Date | null;
@@ -13,7 +12,7 @@ interface CardProps {
   deleteCard: (id: string) => void;
 }
 
-const CardSaude: React.FC<CardProps> = ({id, titulo, descricao, selectedDate, onDateSelected, deleteCard }) => {
+const CardSaude: React.FC<CardProps> = ({ id, titulo, descricao, selectedDate, onDateSelected, deleteCard }) => {
   const [showDetails, setShowDetails] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -43,26 +42,36 @@ const CardSaude: React.FC<CardProps> = ({id, titulo, descricao, selectedDate, on
           elevation: 5,
           backgroundColor: "#1E4034",
           width: '90%',
-          minHeight: "80%", // Define uma altura mínima para os cartões
-          maxHeight: showDetails ? 140 : 120, // Controla a altura com base no estado showDetails
+          minHeight: "80%",
+          maxHeight: showDetails ? 140 : 120,
         }}
       >
         <View style={{flexDirection: 'row', justifyContent: 'space-between', width: '100%', paddingHorizontal: 10}}>
-                <TouchableOpacity onPress={() => deleteCard(id)}>
-                    <MaterialIcons name="delete-outline" size={20} color='#10A4EE' />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => setModalVisible(true)}>
-                    <Feather name="edit-2" size={20} color='#10A4EE' />
-                </TouchableOpacity>
-                </View>
-         <View style={{ position: 'absolute', left: '50%', top: '30%' }}>
+          <TouchableOpacity onPress={() => deleteCard(id)}>
+            <MaterialIcons name="delete-outline" size={20} color='#10A4EE' />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
+            <Feather name="edit-2" size={20} color='#10A4EE' />
+          </TouchableOpacity>
+        </View>
+
+        {/* Título do card */}
+        <View style={{ position: 'absolute', left: '50%', top: '30%' }}>
           <Text style={{ color: '#d5d5d5', fontSize: 18 }}>{titulo}</Text>
         </View>
+
+        {/* Descrição do card, exibida somente se showDetails estiver ativo */}
         {showDetails && (
           <View style={{ position: 'absolute', left: '48%', top: '60%' }}>
             <Text style={{ color: '#d5d5d5', fontSize: 14 }}>{descricao}</Text>
+            {selectedDate && (
+              <Text style={{ color: '#d5d5d5', fontSize: 14 }}>
+                {selectedDate.toLocaleDateString()}
+              </Text>
+            )}
           </View>
         )}
+        {/* Ícone de vaca */}
         <View style={{ marginLeft: '4%', marginTop: '5%' }}>
           <FontAwesome6 name="cow" size={60} color="white" />
         </View>

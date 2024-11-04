@@ -37,6 +37,17 @@ const CalendarAgenda: React.FC = () => {
     </View>
   );
 
+  // Constrói o objeto markedDates com as datas dos eventos
+  const markedDates = events.reduce((acc, event) => {
+    acc[event.date] = { marked: true, dotColor: '#24C0C0' };
+    return acc;
+  }, {} as Record<string, any>);
+
+  // Adiciona a data selecionada com destaque
+  if (selectedDate) {
+    markedDates[selectedDate] = { selected: true, selectedColor: '#24C0C0', marked: true };
+  }
+
   return (
     <View
       style={{
@@ -64,9 +75,7 @@ const CalendarAgenda: React.FC = () => {
 
       <Calendar
         onDayPress={handleDayPress}
-        markedDates={{
-          [selectedDate || '']: { selected: true, marked: true, selectedColor: '#24C0C0' },
-        }}
+        markedDates={markedDates}
         theme={{
           calendarBackground: '#1E4034',
           textSectionTitleColor: '#fff',
