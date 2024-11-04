@@ -13,15 +13,15 @@ interface Card {
   id: string;
   titulo: string;
   descricao: string;
-  data: string;
+  data: Date;
 }
 
 export default function Previsao() {
   const [modalVisible, setModalVisible] = useState(false);
-  const [cards, setCards] = useState<Card[]>([]);
+  const [cards, setCards] = useState<{ id: string; titulo: string; descricao: string; data: Date | null }[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
-  const addCard = async (titulo: string, descricao: string, data: string) => {
+  const addCard = async (titulo: string, descricao: string, data: Date) => {
     if (titulo && data && descricao) {
       try {
         const docRef = await addDoc(collection(db, "previsao"), { titulo, descricao, data });
@@ -47,10 +47,15 @@ export default function Previsao() {
   // UseEffect para buscar dados ao carregar a tela
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "previsao"), (snapshot) => {
-      const cardsData = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Card[];
+      const cardsData = snapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          titulo: data.titulo,
+          descricao: data.descricao,
+          data: data.data ? new Date(data.data.seconds * 1000) : null, // Converte o timestamp para Date
+        };
+      }) as Card[];
       setCards(cardsData);
     });
 
@@ -75,7 +80,7 @@ export default function Previsao() {
                 id={card.id} 
                 titulo={card.titulo} 
                 descricao={card.descricao} 
-                selectedDate={new Date()} // Passe a data se necessário
+                selectedDate={card.data} // Passa a data para o CardSaude
                 onDateSelected={(date) => console.log('Data selecionada:', date)} // Função para lidar com a seleção de data
                 deleteCard={deleteCard}/>
           ))}

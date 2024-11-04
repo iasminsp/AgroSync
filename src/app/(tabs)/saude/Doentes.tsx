@@ -13,16 +13,16 @@ interface Card {
   id: string;
   titulo: string;
   descricao: string;
-  data: string;
+  data: Date;
 }
 
 export default function Doentes() {
   const [modalVisible, setModalVisible] = useState(false);
-  const [cards, setCards] = useState<Card[]>([]);
+  const [cards, setCards] = useState<{ id: string; titulo: string; descricao: string; data: Date | null }[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
     
       // Função para adicionar um novo card
-      const addCard = async (titulo: string, descricao: string, data: string) => {
+      const addCard = async (titulo: string, descricao: string, data: Date) => {
         if (titulo && data && descricao) {
           try {
             const docRef = await addDoc(collection(db, "tratamentos"), { titulo, descricao, data });
@@ -78,7 +78,7 @@ export default function Doentes() {
                 key={index}
                 titulo={card.titulo}
                 descricao={card.descricao}
-                selectedDate={new Date()} // Passe a data se necessário
+                selectedDate={card.data}
                 onDateSelected={(date) => console.log('Data selecionada:', date)} // Função para lidar com a seleção de data
                 id={card.id}       
                 deleteCard={deleteCard}/>

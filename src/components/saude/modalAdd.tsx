@@ -4,27 +4,27 @@ import { Text, TouchableOpacity, View, Platform, TextInput } from "react-native"
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 interface Props {
-  addCard: (Titulo: string, descricao: string, data: string) => void;
+  addCard: (Titulo: string, descricao: string, data: Date) => void;
   closeModal: () => void;
-  onDateSelected: (date: Date) => void; // Nova propriedade para selecionar data
+  onDateSelected: (date: Date) => void;
 }
 
 export default function ModalAdd({ addCard, closeModal, onDateSelected }: Props) {
   const [date, setDate] = useState(new Date());
   const [descricao, setDescricao] = useState('');
   const [titulo, setTitulo] = useState('');
-  const [show, setShow] = useState(false); 
+  const [show, setShow] = useState(false);
 
   const handleSalvar = () => {
-    const formattedDate = date.toLocaleDateString();
-    addCard(titulo, descricao, formattedDate);
-    onDateSelected(date);  // Passa a data para o componente Saude
-    closeModal(); // Fecha o modal
+    addCard(titulo, descricao, date);
+    onDateSelected(date);
+    closeModal();
   };
+
   const onChange = (event: any, selectedDate?: Date) => {
     const currentDate = selectedDate || date;
     setShow(Platform.OS === 'ios');
-    setDate(currentDate); 
+    setDate(currentDate);
   };
 
   const showDatepicker = () => {
@@ -48,40 +48,39 @@ export default function ModalAdd({ addCard, closeModal, onDateSelected }: Props)
       width: '95%',
       height: '80%',
     }}>
-
-        <TouchableOpacity onPress={closeModal}>
-          <MaterialIcons name="arrow-back" size={22} color='#10A4EE' style={{ marginRight: '75%', marginTop: 2 }}/>
-        </TouchableOpacity>
+      <TouchableOpacity onPress={closeModal}>
+        <MaterialIcons name="arrow-back" size={22} color='#10A4EE' style={{ marginRight: '75%', marginTop: 2 }}/>
+      </TouchableOpacity>
 
       <Text style={{ color: "white", fontSize: 16, fontStyle: 'italic', marginBottom: 10 }}>Escolha uma Data</Text>
 
       {/* Botão para abrir o DatePicker */}
-      <TouchableOpacity onPress={showDatepicker}>
-        <Text style={{ color: "white", fontSize: 16, fontStyle: 'italic', marginBottom: 30 }}>{date.toLocaleDateString()}</Text>
+      <TouchableOpacity onPress={showDatepicker} style={{ marginBottom: 30, padding: 10, backgroundColor: '#10A4EE', borderRadius: 5 }}>
+        <Text style={{ color: "white", fontSize: 16 }}>{date.toLocaleDateString()}</Text>
       </TouchableOpacity>
+
       {show && (
         <DateTimePicker 
-        value={date} 
-        mode="date" 
-        display="default" 
-        onChange={onChange} />
+          value={date} 
+          mode="date" 
+          display="default" 
+          onChange={onChange} 
+        />
       )}
 
       <Text style={{ color: "white", fontSize: 16, fontStyle: 'italic', marginBottom: 30 }}>ID da Vaca</Text>
       <TextInput
         style={{
           width: '80%',
-          height: "10%",
+          height: 40,
           backgroundColor: '#d9d9d9',
           borderRadius: 8,
-          paddingHorizontal: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
+          paddingHorizontal: 10,
           marginBottom: 18,
         }}
         placeholder="ID vaca.."
         placeholderTextColor="black"
-        value={titulo} 
+        value={titulo}
         onChangeText={setTitulo}
       />
 
@@ -89,12 +88,10 @@ export default function ModalAdd({ addCard, closeModal, onDateSelected }: Props)
       <TextInput
         style={{
           width: '80%',
-          height: "10%",
+          height: 40,
           backgroundColor: '#d9d9d9',
           borderRadius: 8,
-          paddingHorizontal: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
+          paddingHorizontal: 10,
           marginBottom: 2,
         }}
         placeholder="descrição.."
@@ -104,7 +101,7 @@ export default function ModalAdd({ addCard, closeModal, onDateSelected }: Props)
       />
 
       {/* Botão para salvar */}
-      <TouchableOpacity onPress={handleSalvar} style={{ marginTop: "25%", marginLeft: "70%" }}>
+      <TouchableOpacity onPress={handleSalvar} style={{ marginTop: 25, marginLeft: "70%" }}>
         <MaterialIcons name="check" size={24} color='#10A4EE' />
       </TouchableOpacity>
     </View>
