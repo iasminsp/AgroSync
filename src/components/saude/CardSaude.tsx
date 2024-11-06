@@ -60,7 +60,7 @@ const CardSaude: React.FC<CardProps> = ({ id, titulo, descricao, selectedDate, o
           <Text style={{ color: '#d5d5d5', fontSize: 18 }}>{titulo}</Text>
         </View>
 
-       
+        {/* Descrição do card, exibida somente se showDetails estiver ativo */}
         {showDetails && (
           <View style={{ position: 'absolute', left: '48%', top: '60%' }}>
             <Text style={{ color: '#d5d5d5', fontSize: 14 }}>{descricao}</Text>
@@ -71,7 +71,7 @@ const CardSaude: React.FC<CardProps> = ({ id, titulo, descricao, selectedDate, o
             )}
           </View>
         )}
-      
+        {/* Ícone de vaca */}
         <View style={{ marginLeft: '4%', marginTop: '5%' }}>
           <FontAwesome6 name="cow" size={60} color="white" />
         </View>

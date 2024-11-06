@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, Modal, TouchableOpacity, FlatList } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 
@@ -9,13 +9,14 @@ interface Event {
   date: string;
 }
 
-const CalendarAgenda: React.FC = () => {
+interface CalendarAgendaProps {
+  events: Event[]; // Recebe os eventos como prop
+}
+
+const CalendarAgenda: React.FC<CalendarAgendaProps> = ({ events }) => {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const [events, setEvents] = useState<Event[]>([
-    { id: '1', title: 'Reunião', description: 'Discussão de projeto', date: '2024-11-15' },
-    { id: '2', title: 'Consulta médica', description: 'Consulta geral', date: '2024-11-20' },
-  ]);
   const [modalVisible, setModalVisible] = useState(false);
+
 
   const handleDayPress = (day: any) => {
     setSelectedDate(day.dateString);
@@ -36,26 +37,6 @@ const CalendarAgenda: React.FC = () => {
       <Text style={{ fontSize: 14, color: '#fff' }}>{item.description}</Text>
     </View>
   );
-
-  // Constrói o objeto markedDates com as datas dos eventos
-  const markedDates = events.reduce((acc, event) => {
-    acc[event.date] = { marked: true, dotColor: '#24C0C0' };
-    return acc;
-  }, {} as Record<string, any>);
-  //const [marked, setMarked] = useState({});
-  //useEffect(() => {
-  //  const newMarkedDates = {};
-  //  events.forEach((item) => {
-  //    newMarkedDates[item.date] = { marked: true, dotColor: '#000' };
-  //  });
-  //  setMarked(newMarkedDates);
-  //}, [events]);
-  console.log(markedDates);
-
-  // Adiciona a data selecionada com destaque
-  if (selectedDate) {
-    markedDates[selectedDate] = { selected: true, selectedColor: '#24C0C0', marked: true };
-  }
 
   return (
     <View
@@ -84,8 +65,9 @@ const CalendarAgenda: React.FC = () => {
 
       <Calendar
         onDayPress={handleDayPress}
-        markedDates={markedDates}
-        //markedDates={marked}
+        markedDates={{
+          [selectedDate || '']: { selected: true, marked: true, selectedColor: '#24C0C0' },
+        }}
         theme={{
           calendarBackground: '#1E4034',
           textSectionTitleColor: '#fff',
