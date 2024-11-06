@@ -19,7 +19,7 @@ interface Card {
 export default function Doentes() {
   const [modalVisible, setModalVisible] = useState(false);
   const [cards, setCards] = useState<{ id: string; titulo: string; descricao: string; data: Date | null }[]>([]);
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     
       // Função para adicionar um novo card
       const addCard = async (titulo: string, descricao: string, data: Date) => {
@@ -47,10 +47,15 @@ export default function Doentes() {
 
       useEffect(() => {
         const unsubscribe = onSnapshot(collection(db, "tratamentos"), (snapshot) => {
-          const cardsData = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data(),
-          })) as Card[];
+          const cardsData = snapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+              id: doc.id,
+              titulo: data.titulo,
+              descricao: data.descricao,
+              data: data.data ? new Date(data.data.seconds * 1000) : null, // Converte o timestamp para Date
+            };
+          }) as Card[];
           setCards(cardsData);
         });
     
@@ -75,13 +80,13 @@ export default function Doentes() {
             {/* Renderiza os cartões dinamicamente */}
             {cards.map((card, index) => (
             <CardSaude 
-                key={index}
-                titulo={card.titulo}
-                descricao={card.descricao}
-                selectedDate={card.data}
-                onDateSelected={(date) => console.log('Data selecionada:', date)} // Função para lidar com a seleção de data
-                id={card.id}       
-                deleteCard={deleteCard}/>
+             key={index}
+             id={card.id} 
+             titulo={card.titulo} 
+             descricao={card.descricao} 
+             selectedDate={card.data} // Passa a data para o CardSaude
+             onDateSelected={(date) => console.log('Data selecionada:', date)} // Função para lidar com a seleção de data
+             deleteCard={deleteCard}/>
             ))}
             </ScrollView>
             {/* Modal para adicionar o card */}
