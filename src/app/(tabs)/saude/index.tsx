@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity,Image, Modal } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import SuperiorSaude from '@/src/components/saude/superiorSaude'
 import Calendar from '@/src/components/saude/Calendar'
 import BotomSaude from '@/src/components/saude/botaoSaude'
@@ -7,10 +7,44 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native'
 import Modalfiltro from '@/src/components/saude/modalFiltro'
 import CalendarAgenda from '@/src/components/saude/Calendar'
+import { collection, onSnapshot } from 'firebase/firestore';
+import { db } from "../../../../firebase/firebaseConfig.js";
 
-const Saude = () => {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
+interface Card {
+  id: string;
+  titulo: string;
+  descricao: string;
+  data: Date | null;
+}
+
+const Saude: React.FC = () => {
+  const [cards, setCards] = useState<Card[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "previsao"), (snapshot) => {
+      const cardsData = snapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          titulo: data.titulo,
+          descricao: data.descricao,
+          data: data.data ? new Date(data.data.seconds * 1000) : null,
+        };
+      }) as Card[];
+      setCards(cardsData);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const events = cards.map(card => ({
+    id: card.id,
+    title: card.titulo,
+    description: card.descricao,
+    date: card.data ? card.data.toISOString().split('T')[0] : '',
+  }));
 
   return (
     <View
@@ -28,7 +62,7 @@ const Saude = () => {
         </TouchableOpacity>
         <Text style={{color:'#1E4034' ,fontSize:20,alignContent: "center", fontStyle:"italic"}}>Previsoes do mes</Text>
         </View>
-        <CalendarAgenda/> 
+        <CalendarAgenda events={events} /> 
         <BotomSaude titulo={"previsao"} rota={"Previsao"}/>
         <BotomSaude titulo={"doentes"} rota={"Doentes"}/>
 
