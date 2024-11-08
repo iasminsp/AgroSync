@@ -1,103 +1,175 @@
-import { View, TextInput, StyleSheet, FlatList, TouchableOpacity, Text } from 'react-native';
-import React, { useState } from 'react';
+import { View, TextInput, StyleSheet, FlatList, TouchableOpacity, Text, SafeAreaView, Modal } from 'react-native';
+import React, { useState, useEffect } from 'react';
 import { auth } from '../../../../firebaseConfig';
 import { router } from 'expo-router';
 import VaquinhaCard from '@/src/components/menu/VaquinhaCard';
 import { Ionicons } from '@expo/vector-icons';
+import { addVaquinha, getVaquinhas, deleteVaquinha } from '@/src/services/vaquinhaService';
 
 const Menu = () => {
-  // Logout
   const signUp = async () => {
-    auth.signOut().then((value) => {
+    auth.signOut().then(() => {
       router.push('/')
-    })
-  }
+    });
+  };
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [vaquinhas, setVaquinhas] = useState([
-      { id: '1', nome: 'Vaquinha 1' },
-      { id: '2', nome: 'Vaquinha 2' },
-      { id: '3', nome: 'Vaquinha 3' },
-      { id: '4', nome: 'Vaquinha 4' },
-      { id: '5', nome: 'Vaquinha 5' },
-      { id: '6', nome: 'Vaquinha 6' },
-  ]);
+  const [vaquinhas, setVaquinhas] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [newVaquinhaName, setNewVaquinhaName] = useState('');
+  const [newVaquinhaDesc, setNewVaquinhaDesc] = useState('');
 
-  const handleSearch = (text: string) => {
-      setSearchQuery(text);
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getVaquinhas();
+      setVaquinhas(data);
+    };
+    fetchData();
+  }, []);
+
+  const handleSearch = (text) => {
+    setSearchQuery(text);
+  };
+
+  const handleAddVaquinha = async () => {
+    await addVaquinha(newVaquinhaName, newVaquinhaDesc);
+    setVaquinhas(await getVaquinhas());
+    setModalVisible(false); // Fecha o modal após adicionar
   };
 
   const filteredVaquinhas = vaquinhas.filter(vaquinha =>
-      vaquinha.nome.toLowerCase().includes(searchQuery.toLowerCase())
+    vaquinha.nome.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Função de exclusão de vaquinhas
-  const handleDeleteVaquinha = (id: string) => {
-      console.log(`Excluindo vaquinha com id: ${id}`); // Para verificar a exclusão
-      setVaquinhas(vaquinhas.filter(vaquinha => vaquinha.id !== id));
+  const handleDeleteVaquinha = async (id) => {
+    await deleteVaquinha(id);
+    setVaquinhas(await getVaquinhas());
   };
 
-  return ( 
-    <View style={{ backgroundColor: '#1E4034', height: '100%', width: '100%'}}>
-    <Text style={{ fontSize: 40, color: '#D9D9D9', fontWeight: '700', textAlign: 'center', marginTop: '70%' }}>
-      Menu
-    </Text>
-    <TouchableOpacity 
-        onPress={() => signUp()}
-        style={{ 
-            width: 100, 
-            height: 50, 
-            borderRadius: 15, 
-            backgroundColor: '#1E4034', 
-            alignItems: 'center', 
-            justifyContent: 'center' 
-        }} 
-    >
-        <Text style={{ color: '#D9D9D9', fontWeight: 'bold', fontSize: 20 }}>Logout</Text>
-    </TouchableOpacity>  
-  </View>
-    
-    
-    // //editar dentro do return
-    // <View style={styles.container}>
-    //   <View style={styles.colorBar} /> {/* Barra colorida */}
-    //     <View style={styles.searchContainer}>
-    //         <Ionicons name="search" size={24} color="#1E4034" style={styles.searchIcon} />
-    //         <TextInput
-    //             style={styles.searchInput}
-    //             placeholder="Pesquisar vaquinhas"
-    //             value={searchQuery}
-    //             onChangeText={handleSearch}
-    //         />
-    //     </View>
+  const handleNavigate = (id) => {
+    router.push({
+      pathname: 'informacoesVaquinha',
+      params: { id }
+    });
+  };
 
-    //   {/* Botão de adicionar vaquinhas */}
-    //   <View style={styles.addButtonContainer}>
-    //       <TouchableOpacity style={styles.addButton}>
-    //           <Ionicons name="add-circle" size={50} color="#1E4034" />
-    //       </TouchableOpacity>
-    //   </View>
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#1E4034' }}>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Menu</Text>
+        <TouchableOpacity 
+            onPress={() => signUp()}
+            style={styles.logoutButton} 
+        >
+            <Text style={styles.logoutButtonText}>Logout</Text>
+        </TouchableOpacity>  
+      </View>
 
-    // <FlatList
-    //     data={filteredVaquinhas}
-    //     keyExtractor={item => item.id}
-    //     numColumns={2} // Para 2 por fileira
-    //     renderItem={({ item }) => (
-    //         <VaquinhaCard 
-    //             nome={item.nome} 
-    //             onDelete={() => handleDeleteVaquinha(item.id)} // Passando a função de exclusão
-    //         />
-    //     )}
-    //     contentContainerStyle={styles.flatListContainer}
-    // />
-    // </View>
-  )
-}
+      <View style={styles.container}>
+        <View style={styles.colorBar} />
+        <View style={styles.searchContainer}>
+          <Ionicons name="search" size={24} color="#1E4034" style={styles.searchIcon} />
+          <TextInput
+              style={styles.searchInput}
+              placeholder="Pesquisar vaquinhas"
+              value={searchQuery}
+              onChangeText={handleSearch}
+          />
+        </View>
 
-export default Menu
+        <View style={styles.addButtonContainer}>
+            <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
+                <Ionicons name="add-circle" size={50} color="#1E4034" />
+            </TouchableOpacity>
+        </View>
 
+        <SafeAreaView style={{ flex: 1 }}>
+          <FlatList
+              data={filteredVaquinhas}
+              keyExtractor={item => item.id}
+              numColumns={2}
+              renderItem={({ item }) => (
+                  <TouchableOpacity onPress={() => handleNavigate(item.id)}>
+                    <VaquinhaCard 
+                        nome={item.nome} 
+                        onDelete={() => handleDeleteVaquinha(item.id)}
+                    />
+                  </TouchableOpacity>
+              )}
+              contentContainerStyle={styles.flatListContainer}
+          />
+        </SafeAreaView>
+      </View>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalView}>
+          <Text style={styles.modalText}>Adicionar Nova Vaquinha</Text>
+          <TextInput
+            style={styles.modalInput}
+            placeholder="Nome da Vaquinha"
+            value={newVaquinhaName}
+            onChangeText={setNewVaquinhaName}
+          />
+          <TextInput
+            style={styles.modalInput}
+            placeholder="Descrição da Vaquinha"
+            value={newVaquinhaDesc}
+            onChangeText={setNewVaquinhaDesc}
+          />
+          <TouchableOpacity
+            style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
+            onPress={handleAddVaquinha}
+          >
+            <Text style={styles.textStyle}>Adicionar</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ ...styles.openButton, backgroundColor: '#FF0000' }}
+            onPress={() => setModalVisible(!modalVisible)}
+          >
+            <Text style={styles.textStyle}>Cancelar</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+    </SafeAreaView>
+  );
+};
+
+export default Menu;
 
 const styles = StyleSheet.create({
+  header: {
+    backgroundColor: '#1E4034',
+    paddingTop: 40,
+    paddingBottom: 20,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    paddingHorizontal: 20,
+  },
+  headerText: {
+    fontSize: 40,
+    color: '#D9D9D9',
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  logoutButton: {
+    width: 100,
+    height: 50,
+    borderRadius: 15,
+    backgroundColor: '#1E4034',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  logoutButtonText: {
+    color: '#D9D9D9',
+    fontWeight: 'bold',
+    fontSize: 20
+  },
   container: {
       flex: 1,
       backgroundColor: '#d7d7d7',
@@ -131,7 +203,7 @@ const styles = StyleSheet.create({
       marginRight: 10,
   },
   addButtonContainer: {
-      alignItems: 'flex-end', // Para alinhar o botão à direita
+      alignItems: 'flex-end',
       marginRight: 50,
       marginTop: 10,
   },
@@ -139,6 +211,48 @@ const styles = StyleSheet.create({
       zIndex: 2,
   },
   flatListContainer: {
-      paddingBottom: 100, // Espaçamento extra no final para evitar sobreposição
+      paddingBottom: 100,
   },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
+  openButton: {
+    backgroundColor: "#F194FF",
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    marginVertical: 10
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontSize: 20,
+    fontWeight: 'bold'
+  },
+  modalInput: {
+    width: '100%',
+    height: 40,
+    borderColor: '#cccccc',
+    borderWidth: 1,
+    marginBottom: 20,
+    padding: 10,
+    borderRadius: 5
+  }
 });

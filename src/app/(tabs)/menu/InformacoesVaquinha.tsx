@@ -1,4 +1,7 @@
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { updateVaquinha } from '@/src/services/vaquinhaService'; // Importando a função
 
 interface InformacoesVaquinhaProps {
     route: {
@@ -6,29 +9,96 @@ interface InformacoesVaquinhaProps {
             id: string;
         };
     };
+    navigation: any;
 }
 
-const InformacoesVaquinha: React.FC<InformacoesVaquinhaProps> = ({ route }) => {
-    const { id } = route.params; // Obtendo o id passado na navegação
+const InformacoesVaquinha: React.FC<InformacoesVaquinhaProps> = ({ route, navigation }) => {
+    const { id } = route.params;
+    const [nome, setNome] = useState('');
+    const [descricao, setDescricao] = useState('');
+
+    const handleSave = async () => {
+        const updatedData = { nome, descricao };
+        await updateVaquinha(id, updatedData);
+        navigation.goBack();
+    };
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.text}>Informações da Vaquinha</Text>
-            <Text>ID da Vaquinha: {id}</Text>
-            {/* Aqui você pode adicionar mais informações sobre a vaquinha */}
-        </View>
+        <SafeAreaView style={styles.container}>
+            <View style={styles.header}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Ionicons name="arrow-back" size={24} color="black" />
+                </TouchableOpacity>
+                <Text style={styles.title}>Detalhes da Vaquinha</Text>
+            </View>
+            <View style={styles.content}>
+                <Text style={styles.label}>ID da Vaquinha: {id}</Text>
+                <Text style={styles.label}>Nome da Vaquinha</Text>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Digite o nome"
+                    value={nome}
+                    onChangeText={setNome}
+                />
+                <Text style={styles.label}>Descrição</Text>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Digite a descrição"
+                    value={descricao}
+                    onChangeText={setDescricao}
+                />
+            </View>
+            <View style={styles.footer}>
+                <TouchableOpacity style={styles.button} onPress={handleSave}>
+                    <Text style={styles.buttonText}>Salvar</Text>
+                </TouchableOpacity>
+            </View>
+        </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#d7d7d7',
+        padding: 20,
+        backgroundColor: '#fff',
     },
-    text: {
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    title: {
         fontSize: 24,
+        fontWeight: 'bold',
+        marginLeft: 10,
+    },
+    content: {
+        flex: 1,
+    },
+    label: {
+        fontSize: 18,
+        marginVertical: 10,
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 5,
+        padding: 10,
+        marginBottom: 20,
+    },
+    footer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+    },
+    button: {
+        backgroundColor: '#1E4034',
+        padding: 15,
+        borderRadius: 5,
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 18,
         fontWeight: 'bold',
     },
 });

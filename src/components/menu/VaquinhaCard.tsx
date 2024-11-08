@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Image } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; // Importando os ícones
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 interface VaquinhaCardProps {
     nome: string;
@@ -8,27 +8,23 @@ interface VaquinhaCardProps {
 }
 
 const VaquinhaCard: React.FC<VaquinhaCardProps> = ({ nome, onDelete }) => {
-    // Garantindo que o nome sempre seja uma string válida
     const displayName = nome || "Sem nome";
 
     return (
         <View style={styles.card}>
-            {/* Botão de exclusão à esquerda */}
             <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
-                <Ionicons name="trash" size={40} color="black" /> {/* Ícone de lixeira com cor preta */}
+                <Ionicons name="trash" size={40} color="black" />
             </TouchableOpacity>
 
-            {/* Logo da vaquinha no centro */}
             <View style={styles.imageContainer}>
                 <Image 
-                    source={require('../../assets/saude/vaquinha.png')} // Certifique-se de que o caminho para a logo esteja correto
+                    source={require('../../assets/images/vaquinha.png')} // Certifique-se de que o caminho para a logo esteja correto
                     style={styles.logoImage}
                 />
             </View>
 
-            {/* Barra inferior do card apenas com o nome */}
             <View style={styles.bottomPart}>
-                <Text style={styles.cardText}>{displayName}</Text> {/* Envolvemos o nome em um componente <Text> */}
+                <Text style={styles.cardText}>{displayName}</Text>
             </View>
         </View>
     );
@@ -36,44 +32,43 @@ const VaquinhaCard: React.FC<VaquinhaCardProps> = ({ nome, onDelete }) => {
 
 const styles = StyleSheet.create({
     card: {
-
         backgroundColor: '#1E4034',
         borderRadius: 40,
         margin: 10,
         width: '45%',
         aspectRatio: 2 / 3,
-        justifyContent: 'space-between', // Ajustado para que a logo e a barra inferior tenham espaço
+        justifyContent: 'space-between',
         alignItems: 'center',
         padding: 10,
     },
     deleteButton: {
-        position: 'absolute', // Para posicionar o botão no canto superior esquerdo
-        top: 10, // Ajustado para mais perto do topo
-        left: 10, // Posicionado à esquerda
-        backgroundColor: 'transparent', // Removendo fundo para apenas mostrar o ícone
+        position: 'absolute',
+        top: 10,
+        left: 10,
+        backgroundColor: 'transparent',
     },
     imageContainer: {
-        flex: 1, // Preenche o espaço disponível
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
     },
     logoImage: {
-        width: '100%', // Ajuste dinâmico baseado na largura do card
-        height: undefined, // Deixa o height automático para manter a proporção da imagem
-        aspectRatio: 1, // Define uma proporção 1:1 (quadrado)
-        resizeMode: 'contain', // Redimensiona a imagem sem cortar
+        width: '100%',
+        height: undefined,
+        aspectRatio: 1,
+        resizeMode: 'contain',
     },
     bottomPart: {
         backgroundColor: '#116D6D',
-        width: '100%', // Corrigido para 100% para evitar transbordo
+        width: '100%',
         borderBottomLeftRadius: 40,
         borderBottomRightRadius: 40,
         alignItems: 'center',
-        paddingVertical: 10, // Espaçamento para a barra inferior
+        paddingVertical: 10,
     },
     cardText: {
         color: '#E0FFD1',
-        fontSize: 18, // Tamanho da fonte do nome
+        fontSize: 18,
         fontWeight: 'bold',
     },
 });
