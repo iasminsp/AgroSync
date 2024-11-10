@@ -10,13 +10,12 @@ interface Event {
 }
 
 interface CalendarAgendaProps {
-  events: Event[]; // Recebe os eventos como prop
+  events: Event[];
 }
 
 const CalendarAgenda: React.FC<CalendarAgendaProps> = ({ events }) => {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
-
 
   const handleDayPress = (day: any) => {
     setSelectedDate(day.dateString);
@@ -37,6 +36,24 @@ const CalendarAgenda: React.FC<CalendarAgendaProps> = ({ events }) => {
       <Text style={{ fontSize: 14, color: '#fff' }}>{item.description}</Text>
     </View>
   );
+
+  // Cria um objeto para marcar as datas dos eventos e a data selecionada
+  const markedDates = events.reduce((acc, event) => {
+    acc[event.date] = {
+      marked: true,
+      dotColor: '#24C0C0',
+    };
+    return acc;
+  }, {} as { [key: string]: { marked: boolean; dotColor: string } });
+
+  // Marca a data selecionada com uma cor diferente
+  if (selectedDate) {
+    markedDates[selectedDate] = {
+      selected: true,
+      marked: true,
+      selectedColor: '#24C0C0',
+    };
+  }
 
   return (
     <View
@@ -65,9 +82,7 @@ const CalendarAgenda: React.FC<CalendarAgendaProps> = ({ events }) => {
 
       <Calendar
         onDayPress={handleDayPress}
-        markedDates={{
-          [selectedDate || '']: { selected: true, marked: true, selectedColor: '#24C0C0' },
-        }}
+        markedDates={markedDates}
         theme={{
           calendarBackground: '#1E4034',
           textSectionTitleColor: '#fff',
