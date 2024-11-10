@@ -18,7 +18,7 @@ const VaquinhaCard: React.FC<VaquinhaCardProps> = ({ nome, onDelete }) => {
 
             <View style={styles.imageContainer}>
                 <Image 
-                    source={require('../../assets/images/vaquinha.png')} // Certifique-se de que o caminho para a logo esteja correto
+                    source={require('../../../assets/images/vaquinha.png')}// Certifique-se de que o caminho para a logo esteja correto
                     style={styles.logoImage}
                 />
             </View>

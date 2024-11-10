@@ -23,8 +23,9 @@ const Saude: React.FC = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "previsao"), (snapshot) => {
-      const cardsData = snapshot.docs.map(doc => {
+    // Função para escutar a coleção 'previsao'
+    const unsubscribePrevisao = onSnapshot(collection(db, "previsao"), (snapshot) => {
+      const previsaoData = snapshot.docs.map(doc => {
         const data = doc.data();
         return {
           id: doc.id,
@@ -32,11 +33,29 @@ const Saude: React.FC = () => {
           descricao: data.descricao,
           data: data.data ? new Date(data.data.seconds * 1000) : null,
         };
-      }) as Card[];
-      setCards(cardsData);
+      });
+      setCards(prevCards => [...prevCards, ...previsaoData]); // Adiciona ao array existente
     });
 
-    return () => unsubscribe();
+    // Função para escutar a coleção 'tratamentos'
+    const unsubscribeTratamentos = onSnapshot(collection(db, "tratamentos"), (snapshot) => {
+      const tratamentosData = snapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          titulo: data.titulo,
+          descricao: data.descricao,
+          data: data.data ? new Date(data.data.seconds * 1000) : null,
+        };
+      });
+      setCards(prevCards => [...prevCards, ...tratamentosData]); // Adiciona ao array existente
+    });
+
+    // Limpeza dos listeners
+    return () => {
+      unsubscribePrevisao();
+      unsubscribeTratamentos();
+    };
   }, []);
 
   const events = cards.map(card => ({
