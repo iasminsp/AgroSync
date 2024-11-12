@@ -8,7 +8,7 @@ import { useNavigation } from '@react-navigation/native'
 import Modalfiltro from '@/src/components/saude/modalFiltro'
 import CalendarAgenda from '@/src/components/saude/Calendar'
 import { collection, onSnapshot } from 'firebase/firestore';
-import { db } from "../../../../firebase/firebaseConfig.js";
+import { db } from "../../../../firebaseConfig";
 
 
 interface Card {
