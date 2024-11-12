@@ -9,6 +9,14 @@ const LayoutSaude = () => {
         name="index" 
         options={{ headerShown: false }} 
       />
+      <Stack.Screen 
+        name="Previsao" 
+        options={{ headerShown: false }} 
+      />
+      <Stack.Screen 
+        name="Doentes" 
+        options={{ headerShown: false }} 
+      />
     </Stack>
   )
 }

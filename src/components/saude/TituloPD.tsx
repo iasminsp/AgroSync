@@ -1,19 +1,22 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 interface TituloProps {
   titulo: string;
 }
 
 const TituloPD: React.FC<TituloProps> = ({ titulo }) => {
+  const navigation = useNavigation();
+
   return (
     <View
       style={{
-        position: 'relative', // Permite a posição absoluta da seta
+        position: 'relative',
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: '5%', 
+        marginTop: '1%', 
         marginBottom: '3%', 
         backgroundColor: '#1E4034',
         padding: 10,
@@ -27,7 +30,7 @@ const TituloPD: React.FC<TituloProps> = ({ titulo }) => {
       }}
     >
       {/* Botão de Voltar */}
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
         <MaterialIcons name="arrow-back" size={24} color="#d5d5d5" />
       </TouchableOpacity>
 
@@ -36,7 +39,7 @@ const TituloPD: React.FC<TituloProps> = ({ titulo }) => {
         style={{
           color: '#d5d5d5',
           fontSize: 18,
-          marginLeft: 25, // Espaço entre a seta e o texto
+          marginLeft: 25,
         }}
       >
         {titulo}
@@ -46,12 +49,12 @@ const TituloPD: React.FC<TituloProps> = ({ titulo }) => {
       <View
         style={{
           position: 'absolute',
-          right: '-5%', // Posiciona fora da borda direita
+          right: '-5%',
           top: 0,
           width: 0,
           height: 0,
           borderTopWidth: 30,
-          borderTopColor: '#1E4034', // Mesma cor do fundo do componente
+          borderTopColor: '#1E4034',
           borderRightWidth: 20,
           borderRightColor: 'transparent',
           borderLeftWidth: 20,
@@ -62,12 +65,12 @@ const TituloPD: React.FC<TituloProps> = ({ titulo }) => {
       <View
         style={{
           position: 'absolute',
-          right: '-5%', // Posiciona fora da borda direita
+          right: '-5%',
           bottom: 0,
           width: 0,
           height: 0,
           borderBottomWidth: 30,
-          borderBottomColor: '#1E4034', 
+          borderBottomColor: '#1E4034',
           borderRightWidth: 20,
           borderRightColor: 'transparent',
           borderLeftWidth: 20,

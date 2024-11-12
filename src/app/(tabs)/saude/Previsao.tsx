@@ -7,7 +7,7 @@ import TituloPD from '../../../components/saude/TituloPD';
 import ModalAdd from '../../../components/saude/modalAdd';
 import { MaterialIcons } from '@expo/vector-icons';
 import { addDoc, collection, deleteDoc, doc, onSnapshot } from 'firebase/firestore';
-import { db } from "../../../../firebase/firebaseConfig.js";
+import { db } from '../../../../firebaseConfig'
 
 interface Card {
   id: string;
