@@ -1,148 +1,76 @@
-import { 
-    ImageBackground, 
-    ScrollView, 
-    TouchableOpacity, 
-    View, 
-    Text, 
-    Modal, 
-    StyleSheet 
-} from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useState } from "react";
-import { StatusBar } from "expo-status-bar";
-import SignIn from "./(auth)/sign-in";
-import SignUp from "./(auth)/sign-up";
-import 'react-native-gesture-handler';
-import React from "react";
+import { SafeAreaView, StyleSheet, View, Image, Text, KeyboardAvoidingView, Platform } from "react-native"
+import { FontProvider } from "../components/fonts"
+import { GestureHandlerRootView, ScrollView } from "react-native-gesture-handler"
+import { StatusBar } from "expo-status-bar"
+import assets from "../components/imagens"
+import SignIn from "./(auth)/sign-in"
 
-export default function App() {
-    // Modal
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const [modalContent, setModalContent] = useState<'signIn' | 'signUp'>('signIn')
-    const openSignIn = () => {
-        setModalContent('signIn')
-        setIsModalVisible(true);
-    };
-    const openSignUp = () => {
-        setModalContent('signUp');
-        setIsModalVisible(true);
-    };
-    const handleSignInSuccess = () => {
-        setIsModalVisible(false);
-    };
+
+const App = () => {
+    const logo = assets.logoAgroSync2
 
     return (
-        <GestureHandlerRootView style={styles.handleRoot}>       
-            <SafeAreaView style={styles.safeArea}>
-                <ScrollView contentContainerStyle={styles.scrollView}>
-                        {/* Parte de cima */}
-                        <View style={styles.viewUp}>
-                            <ImageBackground 
-                                source={require('../assets/login/logoSemFundo.png')}
-                                style={styles.imagemLogo}/>
-                            <Text style={styles.agroSync}>
-                                AgroSync
-                            </Text>
-                        </View>
-                        {/* Parte de baixo */}
-                        <View style={styles.viewDown}>
-                            <TouchableOpacity onPress={openSignIn} style={styles.touchable}>
-                                <Text style={styles.touchableText}>
-                                    Entrar
+        <FontProvider>
+            <GestureHandlerRootView style={styles.gestureHandlerRootView}>
+                <KeyboardAvoidingView
+                    style={styles.keyboardAvoidingView}
+                    behavior={Platform.OS === "ios" ? "padding" : "height"}
+                >
+                    <ScrollView 
+                        contentContainerStyle={styles.scrollView}
+                        // keyboardShouldPersistTaps="handled"
+                    >
+                        <SafeAreaView style={styles.safeAreaView}>
+                            <View style={styles.viewGeral}>
+                                <View style={{}}>
+                                    <Image style={styles.logo} source={logo} resizeMode="contain" />
+                                </View>
+                                <Text style={styles.agroSync}>
+                                    AgroSync
                                 </Text>
-                            </TouchableOpacity>  
-                            <TouchableOpacity onPress={openSignUp} style={styles.touchable} >
-                                <Text style={styles.touchableText}>
-                                    Cadastrar
-                                </Text>
-                            </TouchableOpacity>  
-                            <Text style={styles.textMark}>
-                                Seu sistema de controle na palma da sua mão!
-                            </Text>
-                        </View>
-                        {/* Modal responsável por abrir a parte do Entrar/Cadastrar*/}
-                        <Modal 
-                            visible={isModalVisible} 
-                            onRequestClose={
-                                () => setIsModalVisible(false)
-                            } 
-                            animationType="slide"
-                            transparent
-                        >
-                            {modalContent === 'signIn' ? (
-                                <SignIn onSignInSuccess={handleSignInSuccess}/>
-                            ) : (
-                                <SignUp onSignUpSuccess={handleSignInSuccess}/>
-                            )}
-                        </Modal>
-                </ScrollView>
-                <StatusBar 
-                    backgroundColor="#1E4034"
+                            </View>
+                        </SafeAreaView>
+                        <SignIn/>
+                    </ScrollView>
+                </KeyboardAvoidingView>
+                <StatusBar
                     style="light"
-                    /> 
-            </SafeAreaView>
-        </GestureHandlerRootView>
+                />
+            </GestureHandlerRootView>
+        </FontProvider>
     )
 }
 
+export default App
+
 const styles = StyleSheet.create({
-    handleRoot: {
-        height: '100%',
-    },
-    safeArea: {
+    gestureHandlerRootView: {
+        flex: 1,
         backgroundColor: '#1E4034',
+    },
+    keyboardAvoidingView: {
+        flex: 1,
+    },
+    safeAreaView: {
+        flex: 1,
     },
     scrollView: {
+        marginVertical: 'auto',
+        height: '100%',
+    },
+    viewGeral: {
+        flex: 1,
         alignItems: 'center',
-        height: '100%', 
     },
-    viewUp: {
-        backgroundColor: '#1E4034',
-        height: '55%', 
-        width: '100%', 
-    },
-    viewDown: {
-        backgroundColor: '#D9D9D9', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        marginTop: '2%',  
-        height: '40%', 
-        width: '85%', 
-        borderRadius: 50, 
-        padding: 70, 
-        gap: 10, 
-    },
-    imagemLogo: {
-        position: 'absolute', 
-        marginTop: '8%',
-        height: '65%', 
-        width: '100%', 
+    logo: {
+        height: 250,
     },
     agroSync: {
-        textAlign: 'center', 
-        fontWeight: '700', 
-        marginTop: '70%', 
-        color: '#D9D9D9', 
-        fontSize: 40, 
-    },
-    touchable: {
-        backgroundColor: '#1E4034', 
-        justifyContent: 'center',
-        alignItems: 'center', 
-        width: '85%', 
-        height: '37%', 
-        borderRadius: 15, 
-    },
-    touchableText: {
-        fontWeight: 'bold', 
-        color: '#D9D9D9', 
-        fontSize: 20, 
-    },
-    textMark: {
-        textAlign: 'center', 
-        fontWeight: '400', 
-        color: '#1E4034', 
-        top: '15%', 
+        fontFamily: 'EncodeSansRegular',
+        fontSize: 50,
+        color: '#FFFFF7',
+        letterSpacing: 5,
+        textAlign: 'center',
+        margin: 20,
     }
 })

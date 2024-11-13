@@ -20,4 +20,4 @@ export const firestore = getFirestore(appFirebase)
 
 const db = getFirestore(appFirebase);
 
-export { db};
+export { db };

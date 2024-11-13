@@ -1,25 +1,10 @@
-import { Stack } from 'expo-router'
+import { Slot } from "expo-router"
 
-const RootLayout = () => {
+const LayoutApp = () => {
 
-    return (
-        <Stack>
-            <Stack.Screen 
-                name="index" 
-                options={{ headerShown: false }} 
-            />
-
-            <Stack.Screen 
-                name="(auth)" 
-                options={{ headerShown: false }} 
-            />
-
-            <Stack.Screen 
-                name="(tabs)" 
-                options={{ headerShown: false }} 
-            />
-        </Stack>
+    return(
+        <Slot/>
     )
 }
 
-export default RootLayout
+export default LayoutApp

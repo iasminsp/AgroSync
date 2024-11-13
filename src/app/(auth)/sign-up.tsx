@@ -1,247 +1,215 @@
-import React, { useState } from 'react'
-import {
-  TouchableWithoutFeedback,
-  KeyboardAvoidingView,
-  TouchableOpacity,
-  useColorScheme,
-  StyleSheet,
-  TextInput,
-  Platform,
-  Keyboard,
-  View,
-  Text,
-  Alert,
-  ActivityIndicator,
-} from 'react-native'
-import Animated, { useAnimatedKeyboard, useAnimatedStyle } from 'react-native-reanimated'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { createUserWithEmailAndPassword } from 'firebase/auth'
-import { auth, firestore } from '../../../firebaseConfig'
-import { router } from 'expo-router'
-import { StatusBar } from 'expo-status-bar'
-import { doc, setDoc } from 'firebase/firestore'
+import { GestureHandlerRootView, TextInput, TouchableOpacity } from "react-native-gesture-handler"
+import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, SafeAreaView, StyleSheet, Text, View } from "react-native"
+import { FontProvider } from "@/src/components/fonts"
+import { MaterialIcons } from "@expo/vector-icons"
+import { createUserWithEmailAndPassword } from "firebase/auth"
+import { auth, firestore } from "@/firebaseConfig"
+import { doc, setDoc } from "firebase/firestore"
+import { useState, useRef } from "react"
+import { router } from "expo-router"
 
-const SignUp = ({ onSignUpSuccess }: { onSignUpSuccess: () => void }) => {
-  const [nome, setNome] = useState<string>('')
-  const [email, setEmail] = useState<string>('')
-  const [password, setPassword] = useState<string>('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+const SignUp = () => {
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [nome, setNome] = useState('')
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState<string | null>(null)
 
-  const colorScheme = useColorScheme()
-  const keyboard = useAnimatedKeyboard()
+    // Referências para os campos
+    const emailInputRef = useRef<TextInput>(null)
+    const passwordInputRef = useRef<TextInput>(null)
 
-  // Função para capitalizar a primeira letra de cada palavra
-  const capitalizeWords = (text: string) => {
-    return text.replace(/\b\w/g, (char) => char.toUpperCase());
-  };
+    const handleSignUp = async () => {
+        setLoading(true)
+        setError(null)
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+            const user = userCredential.user
 
-  // Função para criar a conta
-  const register = async () => {
-    setLoading(true);
-    setError(null); // Resetar o erro
-    try {
-      const formattedNome = capitalizeWords(nome)
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-      const user = userCredential.user // Captura o usuário criado
+            // Adiciona os dados do usuário no Firestore
+            await setDoc(doc(firestore, 'users', user.uid), {
+                nome: nome,
+                email: email
+            })
 
-      // Salva as informações do usuário no Firestore
-      await setDoc(doc(firestore, 'users', user.uid), {
-        nome: formattedNome,
-        email: email,
-        createdAt: new Date(),
-      }) 
+            Alert.alert('Cadastro realizado com sucesso!', `Bem-vindo ao AgroSync, ${nome}!`)
+            console.log('Usuário cadastrado com sucesso:', user)
 
-      Alert.alert('Cadastro com sucesso!', `Bem-vindo ao AgroSync, ${formattedNome}!`)
-      onSignUpSuccess() // Fecha o modal ao concluir o cadastro
-      console.log(email, '*logou*') 
-      console.log(password, '*logou*')
-      router.push('/menu')
-
-    } catch (error: any) {
-        switch (error.code) {
-          case 'auth/email-already-in-use':
-            // Alert.alert('Endereço de e-mail já está em uso.')
-            setError('Endereço de e-mail já está em uso.')
-            console.log('Erro: e-mail já está em uso')
-            break
-          case 'auth/invalid-email':
-            // Alert.alert('Endereço de e-mail inválido.')
-            setError('Endereço de e-mail inválido.')
-            console.log('Erro: e-mail inválido')
-            break
-          case 'auth/missing-password':
-            // Alert.alert('Insira sua senha.')
-            setError('Insira sua senha.')
-            console.log('Erro: senha não inserida')
-            break
-          case 'auth/weak-password':
-            // Alert.alert('A senha deve ter pelo menos 6 caracteres.')
-            setError('A senha deve ter pelo menos 6 caracteres.')
-            console.log('Erro: Senha fraca')
-            break
-          default:
-            // Alert.alert('Erro ao criar conta. Tente novamente.')
-            setError('Erro ao criar conta. Tente novamente.')
-            console.log('Erro: criação de conta', error.message)
-            break
+            router.push('/menu')
+        } catch (error: any) {
+            switch (error.code) {
+                case 'auth/email-already-in-use':
+                    setError('Este email já está em uso.')
+                    break
+                case 'auth/invalid-email':
+                    setError('Insira um email válido.')
+                    break
+                case 'auth/missing-password':
+                    setError('Digite uma senha.')
+                    break
+                case 'auth/weak-password':
+                    setError('A senha deve ter pelo menos 6 caracteres.')
+                    break
+                default:
+                    setError('Erro ao cadastrar. Tente novamente.')
+                    break
+            }
+            console.log('Erro de cadastro:', error)
+        } finally {
+            setLoading(false)
         }
-      console.log(error)
-    } finally {
-      setLoading(false)
     }
-  };
 
-  // Função para fechar o modal
-  const dismissModal = () => {
-    Keyboard.dismiss()
-    console.log('Fechou o modal')
-    onSignUpSuccess(); // Fecha o modal quando necessário
-  }
+    return (
+        <FontProvider>
+            <GestureHandlerRootView style={styles.gestureHandlerRootView}>
+                <KeyboardAvoidingView
+                    style={styles.keyboardAvoidingView}
+                    behavior={Platform.OS === "ios" ? "padding" : "height"}
+                >
+                    <SafeAreaView style={styles.safeAreaView}>
+                        <View style={styles.viewGeral}>
+                            <Text style={styles.textCadastro}>
+                                Cadastro
+                            </Text>
 
-  const animatedStyles = useAnimatedStyle(() => {
-    return {
-      transform: [{ translateY: -keyboard.state.value }],
-    }
-  })
+                            <View style={styles.viewInput}>
+                                <TextInput
+                                    style={styles.textInput}
+                                    placeholder="Nome"
+                                    placeholderTextColor={'#1E4034'}
+                                    selectionColor={'#1E4034'}
+                                    value={nome}
+                                    onChangeText={setNome}
+                                    returnKeyType="next"  // Define que o próximo campo será focado ao pressionar Enter
+                                    onSubmitEditing={() => emailInputRef.current?.focus()} // Move para o próximo campo
+                                />
+                                <MaterialIcons name="drive-file-rename-outline" size={24} color="#1E4034" style={{ marginVertical: 'auto', margin: 5 }} />
+                            </View>
 
-  return (
-    <TouchableWithoutFeedback onPress={dismissModal}>
-      <SafeAreaView style={styles.safeArea}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={styles.keyboardAvoid}
-        >
-          <View style={styles.viewGeralBorda}>
-            <Animated.View style={[
-              animatedStyles,
-              { backgroundColor: colorScheme === 'light' ? 'transparent' : 'transparent' }
-            ]}>
-              <TouchableWithoutFeedback>
-                <View style={styles.viewGeral}>
-                  <View style={styles.viewUp}>
-                    <Text style={styles.textEntrar}>Cadastro</Text>
-                    <TextInput
-                      style={styles.textInput}
-                      placeholder="Nome"
-                      placeholderTextColor={'#6B6B6B'}
-                      textAlign="center"
-                      autoCapitalize="words"
-                      onChangeText={(value) => setNome(value)}
-                    />
-                    <TextInput
-                      style={styles.textInput}
-                      placeholder="Email"
-                      placeholderTextColor={'#6B6B6B'}
-                      keyboardType="email-address"
-                      textAlign="center"
-                      onChangeText={(value) => setEmail(value)}
-                    />
-                    <TextInput
-                      style={styles.textInput}
-                      placeholder="Senha"
-                      placeholderTextColor={'#6B6B6B'}
-                      secureTextEntry={true}
-                      textAlign="center"
-                      onChangeText={(value) => setPassword(value)}
-                    />
-                  </View>
-                  <View style={styles.viewDown}>
-                    <TouchableOpacity
-                      onPress={() => register()}
-                      style={styles.touchable}
-                      disabled={loading}
-                    >
-                      {loading ? (
-                        <ActivityIndicator size="small" color="#1E4034" />
-                      ) : (
-                        <Text style={styles.textTouchable}>
-                          Entrar
-                        </Text>
-                      )}
-                    </TouchableOpacity>
-                    {error && <Text style={styles.textError}>{error}</Text>}
-                  </View>
-                  <StatusBar 
-                    backgroundColor="#1E4034"
-                    style="light"
-                  />
-                </View>
-              </TouchableWithoutFeedback>
-            </Animated.View>
-          </View>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
-    </TouchableWithoutFeedback>
-  );
-};
+                            <View style={styles.viewInput}>
+                                <TextInput
+                                    ref={emailInputRef} // Adiciona a referência aqui
+                                    style={styles.textInput}
+                                    placeholder="Email"
+                                    placeholderTextColor={'#1E4034'}
+                                    selectionColor={'#1E4034'}
+                                    keyboardType='email-address'
+                                    value={email}
+                                    onChangeText={setEmail}
+                                    returnKeyType="next" // Define que o próximo campo será focado ao pressionar Enter
+                                    onSubmitEditing={() => passwordInputRef.current?.focus()} // Move para o próximo campo
+                                />
+                                <MaterialIcons name="email" size={24} color="#1E4034" style={{ marginVertical: 'auto', margin: 5 }} />
+                            </View>
 
-export default SignUp;
+                            <View style={styles.viewInput}>
+                                <TextInput 
+                                    ref={passwordInputRef} // Adiciona a referência aqui
+                                    style={styles.textInput}
+                                    placeholder="Senha"
+                                    placeholderTextColor={'#1E4034'}
+                                    selectionColor={'#1E4034'}
+                                    secureTextEntry
+                                    value={password}
+                                    onChangeText={setPassword}
+                                    returnKeyType="done" // Define que a tecla Enter fecha o teclado
+                                    onSubmitEditing={handleSignUp} // Aciona a função de cadastro ao pressionar Enter
+                                />
+                                <MaterialIcons name="lock" size={24} color="#1E4034" style={{ marginVertical: 'auto', margin: 5 }} />
+                            </View>
+
+                            {error && 
+                                <Text style={styles.textError}>
+                                    {error}
+                                </Text>
+                            }
+
+                            <TouchableOpacity
+                                style={styles.touchableOpacity}
+                                onPress={handleSignUp}
+                                disabled={loading}
+                            >
+                                {loading ? (
+                                    <ActivityIndicator size="small" color="#FFF" />
+                                ) : (
+                                    <Text style={styles.textOpacityCadastrar}>
+                                        Cadastrar
+                                    </Text>
+                                )}
+                            </TouchableOpacity>
+
+                            <TouchableOpacity onPress={() => router.push('/')}>
+                                <Text>
+                                    fechar
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </SafeAreaView>
+                </KeyboardAvoidingView>
+            </GestureHandlerRootView>
+        </FontProvider>
+    )
+}
+
+export default SignUp
 
 const styles = StyleSheet.create({
-  safeArea: {
-    backgroundColor: 'transparent',
-    justifyContent: 'flex-end',
-    position: 'absolute',
-    height: '100%',
-    width: '100%',
-    flex: 1,
-    top: 0,
-    left: 0,
-  },
-  keyboardAvoid: {
-    // flex: 1,
-  },
-  viewGeralBorda: {
-    backgroundColor: '#D9D9D9',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingHorizontal: '1.5%',
-    paddingTop: '1.5%',
-  },
-  viewGeral: {
-    backgroundColor: '#1E4034',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    padding: 0,
-  },
-  viewUp: {
-    alignItems: 'center',
-  },
-  viewDown: {
-    alignItems: 'center',
-    padding: '10%',
-  },
-  textEntrar: {
-    color: '#D9D9D9',
-    fontWeight: 'bold',
-    fontSize: 30,
-    textAlign: 'center',
-    padding: '12%',
-  },
-  textInput: {
-    backgroundColor: '#D9D9D9',
-    marginBottom: '2%',
-    padding: '4.5%',
-    color: '#1E4034',
-    width: '60%',
-    borderRadius: 15,
-  },
-  touchable: {
-    backgroundColor: '#D9D9D9',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 50,
-    width: 150,
-    borderRadius: 15,
-  },
-  textTouchable: {
-    color: '#1E4034',
-    fontWeight: 'bold',
-    fontSize: 20,
-  },
-  textError: {
-    marginTop: '10%',
-    color: '#fff',
-  },
-});
+    keyboardAvoidingView: {
+        flex: 1,
+    },
+    gestureHandlerRootView: {
+        flex: 1,
+        backgroundColor: 'trasnparent'
+    },
+    safeAreaView: {
+        flex: 1,
+    },
+    viewGeral: {
+        paddingVertical: 35,
+        marginVertical: 'auto',
+        backgroundColor: '#D9D9D9',
+        alignItems: 'center',
+        borderRadius: 25
+    },
+    textCadastro: {
+        fontFamily: 'EncodeSans',
+        color: '#1E4034',
+        letterSpacing: 3,
+        fontSize: 35,
+        margin: 20,
+    },
+    viewInput: {
+        flexDirection: 'row'
+    },
+    textInput: {
+        color: '#1E4034',
+        width: '60%',
+        margin: 5,
+        borderBottomWidth: 1,
+        fontSize: 18,
+        padding: 5,
+        borderColor: '#1E4034',
+    },
+    textError: {
+        borderWidth: 1,
+        borderColor: 'red',
+        color: 'red', 
+        padding: 2,
+        marginTop: 10,
+    },
+    touchableOpacity: {
+        backgroundColor: '#1E4034',
+        padding: 10,
+        margin: 15,
+        borderRadius: 10,
+        width: 126,
+        height: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    textOpacityCadastrar: {
+        fontSize: 25,
+        color: '#FFF',
+    }
+})

@@ -1,247 +1,246 @@
-import React, { useState } from 'react'
-import { 
-  TouchableWithoutFeedback, 
-  KeyboardAvoidingView, 
-  TouchableOpacity, 
-  useColorScheme, 
-  StyleSheet, 
-  TextInput, 
-  Platform, 
-  Keyboard, 
-  View, 
-  Text,
-  ActivityIndicator,
-  Alert, 
-} from 'react-native'
-import Animated, { useAnimatedKeyboard, useAnimatedStyle } from 'react-native-reanimated'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { signInWithEmailAndPassword } from 'firebase/auth'
-import { auth, firestore } from '../../../firebaseConfig'
-import { router } from 'expo-router'
-import { StatusBar } from 'expo-status-bar'
-import { doc, getDoc } from 'firebase/firestore'
+import { Platform, SafeAreaView, StyleSheet, Text, View, TouchableOpacity, Alert, ActivityIndicator, Modal } from "react-native"
+import { GestureHandlerRootView, TextInput,  } from "react-native-gesture-handler"
+import { FontProvider } from "@/src/components/fonts"
+import { MaterialIcons } from "@expo/vector-icons"
+import { useState } from "react"
+import { router } from "expo-router"
+import { auth, firestore } from "@/firebaseConfig"
+import { signInWithEmailAndPassword } from "firebase/auth"
+import { doc, getDoc } from "firebase/firestore"
+import SignUp from "./sign-up"
 
-const SignIn = ({ onSignInSuccess }: { onSignInSuccess: () => void }) => {
+
+const SignIn = () => {
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState<string | null>(null)
+    const [modalVisible, setModalVisible] = useState(false);
+    
+    const handleLogin = async () => {
+        setLoading(true)
+        setError(null)
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
   
-  // Firebase config
-  const [email, setEmail] = useState<string>('')
-  const [password, setPassword] = useState<string>('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+        // Recupera as informações do usuário no Firestore
+        const userDoc = await getDoc(doc(firestore, 'users', user.uid));
+        if (userDoc.exists()) {
+            const userData = userDoc.data()
+            const userNome = userData.nome
 
-  // Modal config
-  const colorScheme = useColorScheme()
-  const keyboard = useAnimatedKeyboard()
-
-  // Firebase arrow function
-  const Login = async () => {
-    setLoading(true)
-    setError(null); // Reset error
-    try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      // Recupera as informações do usuário no Firestore
-      const userDoc = await getDoc(doc(firestore, 'users', user.uid));
-      if (userDoc.exists()) {
-        const userData = userDoc.data();
-        const userNome = userData.nome; // Supondo que o nome esteja armazenado como 'name'
-
-        Alert.alert('Login com sucesso!', `Bem-vindo ao AgroSync, ${userNome}!`);
-        onSignInSuccess(); // Chama a função para fechar o modal
-        console.log(email, '*logou*') 
-        console.log(password, '*logou*')
-        console.log(userNome)
-        router.push('/menu');
-      } else {
-        Alert.alert('Erro', 'Dados do usuário não encontrados.');
-      }
-    } catch (error: any) {
-        switch (error.code) {
-          case 'auth/invalid-email':
-            // Alert.alert('Endereço de e-mail inválido.')
-            setError('Insira um email válido.')
-            console.log('Erro: e-mail inválido')
-            break;
-          case 'auth/invalid-credential':
-            // Alert.alert('Endereço de e-mail inválido.')
-            setError('Email ou senha inválidos.')
-            console.log('Erro: e-mail inválido')
-            break;
-          case 'auth/missing-password':
-            // Alert.alert('Insira sua senha.')
-            setError('Insira sua senha.')
-            console.log('Erro: senha não inserida')
-            break;
-          case 'auth/wrong-password':
-            // Alert.alert('Email ou senha inválidos.')
-            setError('Email ou senha inválidos.')
-            console.log('Erro: email ou senha inválidos')
-            break;
-          case 'auth/user-not-found':
-            // Alert.alert('Nenhum usuário encontrado com esse e-mail.')
-            setError('Nenhum usuário encontrado com esse e-mail.')
-            console.log('Erro: nenhum usuário encontrado')
-            break;
-          default:
-            // Alert.alert('Erro ao fazer login. Tente novamente.')
-            setError('Erro ao fazer login. Tente novamente.')
-            console.log('Outro erro:', error.code)
-            break;
+            Alert.alert('Login com sucesso!', `Bem-vindo ao AgroSync, ${userNome}!`);
+            console.log(email, '*logou*') 
+            console.log(password, '*logou*')
+            console.log(userNome)
+        //   router.push('/menu')
+        } else {
+            Alert.alert('Erro', 'Dados do usuário não encontrados.')
         }
-      console.log(error)
-    } finally {
-      setLoading(false);
+        } catch (error: any) {
+        switch (error.code) {
+            case 'auth/invalid-email':
+                setError('Insira um email válido.')
+                console.log('Erro: e-mail inválido')
+                break;
+            case 'auth/invalid-credential':
+                setError('Email ou senha inválidos.')
+                console.log('Erro: e-mail inválido')
+                break;
+            case 'auth/missing-password':
+                setError('Insira sua senha.')
+                console.log('Erro: senha não inserida')
+                break;
+            case 'auth/wrong-password':
+                setError('Email ou senha inválidos.')
+                console.log('Erro: email ou senha inválidos')
+                break;
+            case 'auth/user-not-found':
+                setError('Nenhum usuário encontrado com esse e-mail.')
+                console.log('Erro: nenhum usuário encontrado')
+                break;
+            default:
+                setError('Erro ao fazer login. Tente novamente.')
+                console.log('Outro erro:', error.code)
+                break;
+            }
+        console.log(error)
+        } 
+        finally {
+            setLoading(false);
+        }
     }
-  }
 
-  // Modal arrow function open
-  const animatedStyles = useAnimatedStyle(() => {
-    return {
-      transform: [{ translateY: -keyboard.state.value }]
-    }
-  })
-
-  // Modal arrow function close
-  const dismissModal = () => {
-    Keyboard.dismiss(); // Area para fechar o modal
-    console.log('fechou o modal');
-    onSignInSuccess(); // Chama a função para fechar o modal 
-  }
-  
-  return (
-    <TouchableWithoutFeedback onPress={dismissModal}>
-      <SafeAreaView style={styles.safeArea}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={styles.keyboardAvoid}
-        >
-          <View style={styles.viewGeralBorda}>
-            <Animated.View style={[animatedStyles, { backgroundColor: colorScheme === 'light' ? 'transparent' : 'transparent' }]}>
-              <TouchableWithoutFeedback>
-                <View style={styles.viewGeral}>
-                  <View style={styles.viewUp}>
-                    <Text style={styles.textEntrar}>
-                      Entrar
-                    </Text>
-                    <TextInput 
-                      style={styles.textInput}
-                      placeholder='Email'
-                      placeholderTextColor={'#6B6B6B'}
-                      keyboardType='email-address'
-                      textAlign='center'
-                      onChangeText={(value) => setEmail(value)}
-                    />
-                    <TextInput 
-                      style={styles.textInput}
-                      placeholder='Senha'
-                      placeholderTextColor={'#6B6B6B'}
-                      secureTextEntry={true}
-                      textAlign='center'
-                      onChangeText={(value) => setPassword(value)}
-                      onSubmitEditing={Login}
-                    />
-                  </View>
-                  <View style={styles.viewDown}>
-                    <TouchableOpacity 
-                      onPress={() => Login()}
-                      style={styles.touchable}
-                      disabled={loading}
-                    >
-                      {loading ? (
-                        <ActivityIndicator size="small" color="#1E4034" />
-                      ) : (
-                        <Text style={styles.textTouchable}>
-                          Entrar
+    return (
+        <FontProvider>
+            <GestureHandlerRootView style={styles.gestureHandlerRootView}>
+                <SafeAreaView style={styles.safeAreaView}>
+                    <View style={styles.viewGeral}>
+                        <Text style={styles.textEntrar}>
+                            Entrar
                         </Text>
-                      )}
-                    </TouchableOpacity>  
-                    {error && 
-                      <Text style={styles.textError}>
-                        {error}
-                      </Text>
-                    }                 
-                  </View>
-                  <StatusBar 
-                    backgroundColor="#1E4034"
-                    style="light"
-                  />
-                </View>
-              </TouchableWithoutFeedback>
-            </Animated.View>
-          </View>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
-    </TouchableWithoutFeedback>
-  )
+
+                        <View style={styles.viewInput}>
+                            <TextInput
+                                style={styles.textInput}
+                                placeholder="Email"
+                                placeholderTextColor={'#1E4034'}
+                                selectionColor={'#1E4034'}
+                                keyboardType='email-address'
+                                value={email}
+                                onChangeText={setEmail}
+                            />
+                            <MaterialIcons name="email" size={24} color="#1E4034" style={{ marginVertical: 'auto', margin: 5 }} />
+                        </View>
+
+                        <View style={styles.viewInput}>
+                            <TextInput 
+                                style={styles.textInput}
+                                placeholder="Senha"
+                                placeholderTextColor={'#1E4034'}
+                                selectionColor={'#1E4034'}
+                                secureTextEntry
+                                value={password}
+                                onChangeText={setPassword}
+                            />
+                            <MaterialIcons name="lock" size={24} color="#1E4034" style={{ marginVertical: 'auto', margin: 5 }} />
+                        </View>
+
+                        {error && 
+                            <Text style={styles.textError}>
+                            {error}
+                            </Text>
+                        }   
+
+                        <TouchableOpacity
+                            style={styles.touchableOpacity}
+                            onPress={handleLogin}
+                            disabled={loading}
+                        >
+                            {loading ? (
+                                <ActivityIndicator size="small" color="#FFF" />
+                            ) : (
+                                <Text style={styles.textOpacityEntrar}>
+                                    Entrar
+                                </Text>
+                            )}
+                        </TouchableOpacity>
+                        
+                        <View style={styles.viewCriarConta}>
+                            <Text style={styles.textDescricao}>
+                                Não tem uma conta?
+                            </Text>
+                            <TouchableOpacity onPress={() => setModalVisible(true)}>
+                                <Text style={styles.textCriarConta}>
+                                    Criar conta
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </SafeAreaView>
+
+                {/* Modal para SignUp */}
+                <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => setModalVisible(false)}
+                >
+                    <View style={styles.modalView}>
+                        <SignUp />
+                    </View>
+                </Modal>
+            </GestureHandlerRootView>
+        </FontProvider>
+    )
 }
 
 export default SignIn
 
 const styles = StyleSheet.create({
-  safeArea: {
-    backgroundColor: 'transparent',
-    justifyContent: 'flex-end',
-    position: 'absolute',
-    height: '100%',
-    width: '100%',
-    flex: 1,
-    top: 0,
-    left: 0,
-  },
-  keyboardAvoid: {
-    // flex: 1,
-  },
-  viewGeralBorda: {
-    backgroundColor: '#D9D9D9',
-    borderTopLeftRadius: 30, 
-    borderTopRightRadius: 30,
-    paddingHorizontal: '1.5%',
-    paddingTop: '1.5%',
-  },
-  viewGeral: {
-    backgroundColor: '#1E4034',
-    borderTopLeftRadius: 30, 
-    borderTopRightRadius: 30,
-    padding: 0, 
-  },
-  viewUp: {
-    alignItems: 'center', 
-  },
-  viewDown: {
-    alignItems: 'center', 
-    padding: '10%', 
-  },
-  textEntrar: {
-    color: '#D9D9D9', 
-    fontWeight: 'bold', 
-    fontSize: 30, 
-    textAlign: 'center', 
-    padding: '12%',
-  },
-  textInput: {
-    backgroundColor: '#D9D9D9',
-    marginBottom: '2%', 
-    padding: '4.5%',
-    color: '#1E4034',
-    width: '60%',
-    borderRadius: 15,
-  },
-  touchable: {
-    backgroundColor: '#D9D9D9', 
-    justifyContent: 'center',
-    alignItems: 'center', 
-    height: 50, 
-    width: 120, 
-    borderRadius: 15, 
-  },
-  textTouchable: {
-    color: '#1E4034', 
-    fontWeight: 'bold', 
-    fontSize: 20,
-  },
-  textError: {
-    marginTop: '10%',
-    color: '#fff', 
-  }
+    gestureHandlerRootView: {
+        flex: 1,
+        backgroundColor: Platform.select({
+            ios: '#D9D9D9',
+            android: 'transparent',
+            web: '#D9D9D9',
+        }),
+        borderTopRightRadius: 120,
+        borderTopLeftRadius: 120,
+    },
+    safeAreaView: {
+        flex: 1,
+        width: "100%",
+    },
+    viewGeral: {
+        backgroundColor: '#D9D9D9',
+        height: '100%',
+        alignItems: 'center',
+        borderTopRightRadius: 120,
+        borderTopLeftRadius: 120,
+        paddingVertical: 42,
+    },
+    textEntrar: {
+        fontFamily: 'EncodeSans',
+        color: '#1E4034',
+        letterSpacing: 3,
+        fontSize: 35,
+        margin: 20,
+    },
+    viewInput: {
+        flexDirection: 'row'
+    },
+    textInput: {
+        color: '#1E4034',
+        width: '60%',
+        margin: 5,
+        borderBottomWidth: 1,
+        fontSize: 18,
+        padding: 5,
+        borderColor: '#1E4034',
+    },
+    touchableOpacity: {
+        backgroundColor: '#1E4034',
+        padding: 10,
+        margin: 15,
+        borderRadius: 10,
+        width: '22%',
+        height: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    textOpacityEntrar: {
+        fontSize: 25,
+        color: '#FFF',
+    },
+    viewCriarConta: {
+        flexDirection: 'row', 
+        margin: 10, 
+        gap: 5, 
+    },
+    textDescricao: {
+        color: '#1E4034',
+    },
+    textCriarConta: {
+        color: '#1E4034',
+        textDecorationLine: 'underline',
+    },
+    textError: {
+        borderWidth: 1,
+        borderColor: 'red',
+        color: 'red', 
+        padding: 2,
+        marginTop: 10,
+    },
+    modalView: {
+        flex: 1,
+        backgroundColor: "rgba(0, 0, 0, 0.9)",
+        // borderRadius: Platform.select({
+        //     ios: 25,
+        //     android: 0,
+        //     web: 0,
+        // }),
+        padding: 20,
+    }
 })
