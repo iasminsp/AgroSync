@@ -30,11 +30,11 @@ const SignIn = () => {
             const userData = userDoc.data()
             const userNome = userData.nome
 
-            Alert.alert('Login com sucesso!', `Bem-vindo ao AgroSync, ${userNome}!`);
+            Alert.alert('Login com sucesso!', `Bem-vindo ao AgroSync, ${userNome}!`)
             console.log(email, '*logou*') 
             console.log(password, '*logou*')
             console.log(userNome)
-        //   router.push('/menu')
+            router.push('/menu')
         } else {
             Alert.alert('Erro', 'Dados do usuário não encontrados.')
         }
@@ -236,11 +236,6 @@ const styles = StyleSheet.create({
     modalView: {
         flex: 1,
         backgroundColor: "rgba(0, 0, 0, 0.9)",
-        // borderRadius: Platform.select({
-        //     ios: 25,
-        //     android: 0,
-        //     web: 0,
-        // }),
         padding: 20,
     }
 })

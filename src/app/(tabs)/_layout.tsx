@@ -1,5 +1,6 @@
 import { Tabs } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
+import { StatusBar } from 'expo-status-bar'
 
 const TabsLayout = () => {
 
@@ -86,6 +87,9 @@ const TabsLayout = () => {
           }}
         />
       </Tabs>
+      <StatusBar
+          style="light"
+      />
     </>
   )
 }

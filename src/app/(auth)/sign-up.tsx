@@ -1,4 +1,4 @@
-import { GestureHandlerRootView, TextInput, TouchableOpacity } from "react-native-gesture-handler"
+import { GestureHandlerRootView, ScrollView, TextInput, TouchableOpacity } from "react-native-gesture-handler"
 import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, SafeAreaView, StyleSheet, Text, View } from "react-native"
 import { FontProvider } from "@/src/components/fonts"
 import { MaterialIcons } from "@expo/vector-icons"
@@ -67,85 +67,86 @@ const SignUp = () => {
                     style={styles.keyboardAvoidingView}
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
                 >
-                    <SafeAreaView style={styles.safeAreaView}>
-                        <View style={styles.viewGeral}>
-                            <Text style={styles.textCadastro}>
-                                Cadastro
-                            </Text>
-
-                            <View style={styles.viewInput}>
-                                <TextInput
-                                    style={styles.textInput}
-                                    placeholder="Nome"
-                                    placeholderTextColor={'#1E4034'}
-                                    selectionColor={'#1E4034'}
-                                    value={nome}
-                                    onChangeText={setNome}
-                                    returnKeyType="next"  // Define que o próximo campo será focado ao pressionar Enter
-                                    onSubmitEditing={() => emailInputRef.current?.focus()} // Move para o próximo campo
-                                />
-                                <MaterialIcons name="drive-file-rename-outline" size={24} color="#1E4034" style={{ marginVertical: 'auto', margin: 5 }} />
-                            </View>
-
-                            <View style={styles.viewInput}>
-                                <TextInput
-                                    ref={emailInputRef} // Adiciona a referência aqui
-                                    style={styles.textInput}
-                                    placeholder="Email"
-                                    placeholderTextColor={'#1E4034'}
-                                    selectionColor={'#1E4034'}
-                                    keyboardType='email-address'
-                                    value={email}
-                                    onChangeText={setEmail}
-                                    returnKeyType="next" // Define que o próximo campo será focado ao pressionar Enter
-                                    onSubmitEditing={() => passwordInputRef.current?.focus()} // Move para o próximo campo
-                                />
-                                <MaterialIcons name="email" size={24} color="#1E4034" style={{ marginVertical: 'auto', margin: 5 }} />
-                            </View>
-
-                            <View style={styles.viewInput}>
-                                <TextInput 
-                                    ref={passwordInputRef} // Adiciona a referência aqui
-                                    style={styles.textInput}
-                                    placeholder="Senha"
-                                    placeholderTextColor={'#1E4034'}
-                                    selectionColor={'#1E4034'}
-                                    secureTextEntry
-                                    value={password}
-                                    onChangeText={setPassword}
-                                    returnKeyType="done" // Define que a tecla Enter fecha o teclado
-                                    onSubmitEditing={handleSignUp} // Aciona a função de cadastro ao pressionar Enter
-                                />
-                                <MaterialIcons name="lock" size={24} color="#1E4034" style={{ marginVertical: 'auto', margin: 5 }} />
-                            </View>
-
-                            {error && 
-                                <Text style={styles.textError}>
-                                    {error}
+                    <ScrollView contentContainerStyle={styles.scrollView}>
+                        <SafeAreaView style={styles.safeAreaView}>
+                            <View style={styles.viewGeral}>
+                                <View style={{position: 'absolute', flexDirection: 'row', start: '8%', top: '8%'}}>
+                                    <TouchableOpacity onPress={() => router.push('/')}>
+                                        <MaterialIcons name="close" size={24} color="#1E4034" />
+                                    </TouchableOpacity>
+                                </View>
+                                <Text style={styles.textCadastro}>
+                                    Cadastro
                                 </Text>
-                            }
 
-                            <TouchableOpacity
-                                style={styles.touchableOpacity}
-                                onPress={handleSignUp}
-                                disabled={loading}
-                            >
-                                {loading ? (
-                                    <ActivityIndicator size="small" color="#FFF" />
-                                ) : (
-                                    <Text style={styles.textOpacityCadastrar}>
-                                        Cadastrar
+                                <View style={styles.viewInput}>
+                                    <TextInput
+                                        style={styles.textInput}
+                                        placeholder="Nome"
+                                        placeholderTextColor={'#1E4034'}
+                                        selectionColor={'#1E4034'}
+                                        value={nome}
+                                        onChangeText={setNome}
+                                        returnKeyType="next"  // Define que o próximo campo será focado ao pressionar Enter
+                                        onSubmitEditing={() => emailInputRef.current?.focus()} // Move para o próximo campo
+                                    />
+                                    <MaterialIcons name="drive-file-rename-outline" size={24} color="#1E4034" style={{ marginVertical: 'auto', margin: 5 }} />
+                                </View>
+
+                                <View style={styles.viewInput}>
+                                    <TextInput
+                                        ref={emailInputRef} // Adiciona a referência aqui
+                                        style={styles.textInput}
+                                        placeholder="Email"
+                                        placeholderTextColor={'#1E4034'}
+                                        selectionColor={'#1E4034'}
+                                        keyboardType='email-address'
+                                        value={email}
+                                        onChangeText={setEmail}
+                                        returnKeyType="next" // Define que o próximo campo será focado ao pressionar Enter
+                                        onSubmitEditing={() => passwordInputRef.current?.focus()} // Move para o próximo campo
+                                    />
+                                    <MaterialIcons name="email" size={24} color="#1E4034" style={{ marginVertical: 'auto', margin: 5 }} />
+                                </View>
+
+                                <View style={styles.viewInput}>
+                                    <TextInput 
+                                        ref={passwordInputRef} // Adiciona a referência aqui
+                                        style={styles.textInput}
+                                        placeholder="Senha"
+                                        placeholderTextColor={'#1E4034'}
+                                        selectionColor={'#1E4034'}
+                                        secureTextEntry
+                                        value={password}
+                                        onChangeText={setPassword}
+                                        returnKeyType="done" // Define que a tecla Enter fecha o teclado
+                                        onSubmitEditing={handleSignUp} // Aciona a função de cadastro ao pressionar Enter
+                                    />
+                                    <MaterialIcons name="lock" size={24} color="#1E4034" style={{ marginVertical: 'auto', margin: 5 }} />
+                                </View>
+
+                                {error && 
+                                    <Text style={styles.textError}>
+                                        {error}
                                     </Text>
-                                )}
-                            </TouchableOpacity>
+                                }
 
-                            <TouchableOpacity onPress={() => router.push('/')}>
-                                <Text>
-                                    fechar
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    </SafeAreaView>
+                                <TouchableOpacity
+                                    style={styles.touchableOpacity}
+                                    onPress={handleSignUp}
+                                    disabled={loading}
+                                >
+                                    {loading ? (
+                                        <ActivityIndicator size="small" color="#FFF" />
+                                    ) : (
+                                        <Text style={styles.textOpacityCadastrar}>
+                                            Cadastrar
+                                        </Text>
+                                    )}
+                                </TouchableOpacity>
+                            </View>
+                        </SafeAreaView>
+                    </ScrollView>
                 </KeyboardAvoidingView>
             </GestureHandlerRootView>
         </FontProvider>
@@ -162,15 +163,20 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'trasnparent'
     },
+    scrollView: {
+        marginVertical: 'auto',
+        height: '100%',
+    },
     safeAreaView: {
         flex: 1,
     },
     viewGeral: {
-        paddingVertical: 35,
-        marginVertical: 'auto',
         backgroundColor: '#D9D9D9',
+        marginVertical: '50%',
         alignItems: 'center',
-        borderRadius: 25
+        paddingVertical: 35,
+        borderRadius: 25,
+        // marginVertical: 'auto',
     },
     textCadastro: {
         fontFamily: 'EncodeSans',
