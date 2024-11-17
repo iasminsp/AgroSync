@@ -1,6 +1,7 @@
 import { addDoc, collection, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../firebaseConfig'; // Ajuste o caminho conforme a estrutura do seu projeto
 
+// Função para adicionar uma nova vaquinha
 export const addVaquinha = async (nome, descricao) => {
   try {
     const docRef = await addDoc(collection(db, 'vaquinhas'), {
@@ -13,6 +14,7 @@ export const addVaquinha = async (nome, descricao) => {
   }
 };
 
+// Função para buscar todas as vaquinhas
 export const getVaquinhas = async () => {
   const querySnapshot = await getDocs(collection(db, 'vaquinhas'));
   const vaquinhas = [];
@@ -22,6 +24,7 @@ export const getVaquinhas = async () => {
   return vaquinhas;
 };
 
+// Função para atualizar uma vaquinha existente
 export const updateVaquinha = async (id, updatedData) => {
   const vaquinhaRef = doc(db, 'vaquinhas', id);
   try {
@@ -32,6 +35,7 @@ export const updateVaquinha = async (id, updatedData) => {
   }
 };
 
+// Função para deletar uma vaquinha
 export const deleteVaquinha = async (id) => {
   const vaquinhaRef = doc(db, 'vaquinhas', id);
   try {

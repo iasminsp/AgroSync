@@ -7,18 +7,21 @@ import { Ionicons } from '@expo/vector-icons';
 import { addVaquinha, getVaquinhas, deleteVaquinha } from '@/src/services/vaquinhaService';
 
 const Menu = () => {
+  // Função para deslogar o usuário
   const signUp = async () => {
     auth.signOut().then(() => {
       router.push('/')
     });
   };
 
+  // Estados para pesquisa, lista de vaquinhas, visibilidade do modal e novos dados da vaquinha
   const [searchQuery, setSearchQuery] = useState('');
   const [vaquinhas, setVaquinhas] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [newVaquinhaName, setNewVaquinhaName] = useState('');
   const [newVaquinhaDesc, setNewVaquinhaDesc] = useState('');
 
+  // useEffect para buscar vaquinhas ao carregar o componente
   useEffect(() => {
     const fetchData = async () => {
       const data = await getVaquinhas();
@@ -27,25 +30,30 @@ const Menu = () => {
     fetchData();
   }, []);
 
+  // Função para filtrar vaquinhas com base na pesquisa
   const handleSearch = (text) => {
     setSearchQuery(text);
   };
 
+  // Função para adicionar uma nova vaquinha
   const handleAddVaquinha = async () => {
     await addVaquinha(newVaquinhaName, newVaquinhaDesc);
     setVaquinhas(await getVaquinhas());
     setModalVisible(false); // Fecha o modal após adicionar
   };
 
+  // Filtra as vaquinhas de acordo com a pesquisa
   const filteredVaquinhas = vaquinhas.filter(vaquinha =>
     vaquinha.nome.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Função para deletar uma vaquinha
   const handleDeleteVaquinha = async (id) => {
     await deleteVaquinha(id);
     setVaquinhas(await getVaquinhas());
   };
 
+  // Função para navegar para a tela de detalhes da vaquinha
   const handleNavigate = (id) => {
     router.push({
       pathname: 'informacoesVaquinha',
@@ -54,6 +62,7 @@ const Menu = () => {
   };
 
   return (
+    // SafeAreaView para evitar sobreposição com a barra de status e o notch
     <SafeAreaView style={{ flex: 1, backgroundColor: '#1E4034' }}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Menu</Text>
