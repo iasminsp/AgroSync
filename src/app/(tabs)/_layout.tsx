@@ -1,43 +1,22 @@
 import { Tabs } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
 import { StatusBar } from 'expo-status-bar'
+import { StyleSheet } from 'react-native'
 
 const TabsLayout = () => {
 
   return (
     <>
-      <Tabs 
+      <Tabs
         screenOptions={{
-          tabBarShowLabel: false,
-          tabBarIconStyle: {
-            flex: 1,
-            justifyContent: 'center',
-            padding: 11,
-          },
-          tabBarStyle: { 
-            backgroundColor: '#D9D9D9',
-            flex: 1,
-            height: 80,
-            position: 'absolute',
-            bottom: "0%",
-            right: 0,
-            left: 0,
-            borderRadius: 50,
-            shadowColor: '#1E4034',
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.35,
-            shadowRadius: 3.84,
-            justifyContent: 'center',
-            alignItems: 'center',
-          },
+          headerShown: false,
+          tabBarStyle: [styles.tabBarStyles],
           tabBarActiveTintColor: '#1E4034',
         }}
       >
         <Tabs.Screen
           name='menu'
           options={{
-            tabBarShowLabel: false,
-            headerShown: false,
             title: 'Menu',
             tabBarIcon: ({ color, size, focused }) => {
               if(focused){
@@ -51,7 +30,6 @@ const TabsLayout = () => {
           name='saude'
           options={{
             title: 'Saude',
-            headerShown: false,
             tabBarIcon: ({ color, size, focused }) => {
               if(focused){
                 return <Ionicons name="medical-sharp"  size={size} color={color} />
@@ -64,7 +42,6 @@ const TabsLayout = () => {
           name='despesas'
           options={{
             title: 'Despesas',
-            headerShown: false,
             tabBarIcon: ({ color, size, focused }) => {
               if(focused){
                 return <Ionicons name="cash-sharp"  size={size} color={color} />
@@ -77,7 +54,6 @@ const TabsLayout = () => {
           name='relatorio'
           options={{
             title: 'Relatorio',
-            headerShown: false,
             tabBarIcon: ({ color, size, focused }) => {
               if(focused){
                 return <Ionicons name="document-text"  size={size} color={color} />
@@ -88,10 +64,26 @@ const TabsLayout = () => {
         />
       </Tabs>
       <StatusBar
-          style="light"
+        style="light"
+        backgroundColor='#1E4034'
       />
     </>
   )
 }
 
 export default TabsLayout
+
+const styles = StyleSheet.create({
+  tabBarStyles: {
+    backgroundColor: '#D9D9D9',
+    position: 'absolute',
+    borderTopLeftRadius: 50,
+    borderTopRightRadius: 50,
+    shadowColor: '#1E4034',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.35,
+    shadowRadius: 3.84,
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
+})

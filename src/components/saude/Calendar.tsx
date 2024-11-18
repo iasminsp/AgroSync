@@ -74,7 +74,7 @@ const CalendarAgenda: React.FC<CalendarAgendaProps> = ({ events }) => {
           color: '#fff',
           fontSize: 20,
           fontWeight: 'bold',
-          marginBottom: '5%',
+          // marginBottom: '5%',
         }}
       >
         Calendário - {new Date().getMonth() + 1}/{new Date().getFullYear()}

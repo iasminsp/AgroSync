@@ -153,7 +153,7 @@ export default Menu;
 const styles = StyleSheet.create({
   header: {
     backgroundColor: '#1E4034',
-    paddingTop: 40,
+    // paddingTop: 40,
     paddingBottom: 20,
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -235,7 +235,8 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5
+    elevation: 5,
+    top: '25%',
   },
   openButton: {
     backgroundColor: "#F194FF",

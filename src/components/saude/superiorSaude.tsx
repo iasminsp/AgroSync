@@ -13,10 +13,10 @@ const SuperiorSaude: React.FC<SuperiorProps> = ({ titulo }) => {
         backgroundColor: '#1E4034',
         width: '100%',
         height: '11%', // Ajuste de altura para porcentagem
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
+        // shadowColor: '#000',
+        // shadowOffset: { width: 0, height: 2 },
+        // shadowOpacity: 0.25,
+        // shadowRadius: 3.84,
         elevation: 0,
       }}
     >
