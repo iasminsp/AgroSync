@@ -14,7 +14,7 @@ const App = () => {
             <GestureHandlerRootView style={styles.gestureHandlerRootView}>
                 <KeyboardAvoidingView
                     style={styles.keyboardAvoidingView}
-                    behavior={Platform.OS === "ios" ? "padding" : "height"}
+                    behavior={Platform.OS === "ios" ? "padding" : "padding"}
                 >
                     <ScrollView 
                         contentContainerStyle={styles.scrollView}
