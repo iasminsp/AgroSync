@@ -15,10 +15,11 @@ export default function ModalAdd({ addCard, closeModal, onDateSelected }: Props)
   const [descricao, setDescricao] = useState("");
   const [titulo, setTitulo] = useState("");
   const [show, setShow] = useState(false);
-  const [vaquinhas, setVaquinhas] = useState([]); // Lista de nomes do banco
+  const [vaquinhas, setVaquinhas] = useState<string[]>([]); // Lista de nomes do banco
+  const [showVaquinhas, setShowVaquinhas] = useState(false); // Controla a exibição da lista
+  const [busca, setBusca] = useState(""); // Texto do campo de busca
 
   useEffect(() => {
-    // Buscar nomes de vaquinhas do banco
     const fetchVaquinhas = async () => {
       try {
         const data = await getVaquinhas();
@@ -44,7 +45,13 @@ export default function ModalAdd({ addCard, closeModal, onDateSelected }: Props)
 
   const handleVaquinhaSelect = (nome: string) => {
     setTitulo(nome); // Define o nome da vaquinha selecionada
+    setShowVaquinhas(false); // Esconde a lista
   };
+
+  // Filtrar as vaquinhas com base no texto de busca
+  const vaquinhasFiltradas = vaquinhas.filter((nome) =>
+    nome.toLowerCase().includes(busca.toLowerCase())
+  );
 
   return (
     <View
@@ -62,7 +69,7 @@ export default function ModalAdd({ addCard, closeModal, onDateSelected }: Props)
         elevation: 50,
         backgroundColor: "#1E4034",
         width: "95%",
-        height: "80%",
+        height: "85%",
       }}
     >
       <TouchableOpacity onPress={closeModal}>
@@ -91,29 +98,52 @@ export default function ModalAdd({ addCard, closeModal, onDateSelected }: Props)
       <Text style={{ color: "white", fontSize: 16, fontStyle: "italic", marginBottom: 10 }}>
         Selecione uma Vaca
       </Text>
-      <FlatList
-        data={vaquinhas}
-        keyExtractor={(item, index) => index.toString()}
+      <TouchableOpacity
+        onPress={() => setShowVaquinhas(!showVaquinhas)}
         style={{
+          padding: 10,
+          backgroundColor: "#d9d9d9",
+          borderRadius: 5,
+          marginBottom: 10,
           width: "80%",
-          maxHeight: 150,
-          backgroundColor: "#ffffff",
-          borderRadius: 8,
-          marginBottom: 20,
         }}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            onPress={() => handleVaquinhaSelect(item)}
+      >
+        <Text style={{ color: "black", fontSize: 16 }}>
+          {titulo || "Selecione uma vaquinha"}
+        </Text>
+      </TouchableOpacity>
+
+      {showVaquinhas && (
+        <View style={{ width: "80%", maxHeight: 200, backgroundColor: '#f0ffff', borderRadius: 8 }}>
+          <TextInput
             style={{
               padding: 10,
               borderBottomWidth: 1,
               borderColor: "#ccc",
+              backgroundColor: "#f0f0f0",
             }}
-          >
-            <Text style={{ fontSize: 16, color: "black" }}>{item}</Text>
-          </TouchableOpacity>
-        )}
-      />
+            placeholder="Buscar vaquinha..."
+            value={busca}
+            onChangeText={setBusca}
+          />
+          <FlatList
+            data={vaquinhasFiltradas}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                onPress={() => handleVaquinhaSelect(item)}
+                style={{
+                  padding: 10,
+                  borderBottomWidth: 1,
+                  borderColor: "#ccc",
+                }}
+              >
+                <Text style={{ fontSize: 16, color: "black" }}>{item}</Text>
+              </TouchableOpacity>
+            )}
+          />
+        </View>
+      )}
 
       <Text style={{ color: "white", fontSize: 16, fontStyle: "italic", marginBottom: 20 }}>
         Descrição
