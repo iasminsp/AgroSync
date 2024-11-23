@@ -2,28 +2,29 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
 import { Text, TouchableOpacity, View, FlatList, TextInput } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { getVaquinhas } from "@/src/services/vaquinhaService"; // Certifique-se de que este serviço está configurado
+import { getVaquinhas } from "@/src/services/vaquinhaService";
 
 interface Props {
   addCard: (titulo: string, descricao: string, data: Date) => void;
   closeModal: () => void;
   onDateSelected: (date: Date) => void;
+  eventType: "previsao" | "tratamento"; // Definido externamente
 }
 
-export default function ModalAdd({ addCard, closeModal, onDateSelected }: Props) {
+export default function ModalAdd({ addCard, closeModal, onDateSelected, eventType }: Props) {
   const [date, setDate] = useState(new Date());
   const [descricao, setDescricao] = useState("");
   const [titulo, setTitulo] = useState("");
   const [show, setShow] = useState(false);
-  const [vaquinhas, setVaquinhas] = useState<string[]>([]); // Lista de nomes do banco
-  const [showVaquinhas, setShowVaquinhas] = useState(false); // Controla a exibição da lista
-  const [busca, setBusca] = useState(""); // Texto do campo de busca
+  const [vaquinhas, setVaquinhas] = useState<string[]>([]);
+  const [showVaquinhas, setShowVaquinhas] = useState(false);
+  const [busca, setBusca] = useState("");
 
   useEffect(() => {
     const fetchVaquinhas = async () => {
       try {
         const data = await getVaquinhas();
-        setVaquinhas(data.map((vaquinha) => vaquinha.nome)); // Extrai apenas os nomes
+        setVaquinhas(data.map((vaquinha) => vaquinha.nome));
       } catch (error) {
         console.error("Erro ao buscar vaquinhas:", error);
       }
@@ -32,8 +33,12 @@ export default function ModalAdd({ addCard, closeModal, onDateSelected }: Props)
   }, []);
 
   const handleSalvar = () => {
-    addCard(titulo, descricao, date);
-    onDateSelected(date);
+    // Ajusta a data apenas se for "previsao"
+    const adjustedDate =
+      eventType === "previsao" ? new Date(date.getTime() + 283 * 24 * 60 * 60 * 1000) : date;
+
+    addCard(titulo, descricao, adjustedDate);
+    onDateSelected(adjustedDate);
     closeModal();
   };
 
@@ -44,11 +49,10 @@ export default function ModalAdd({ addCard, closeModal, onDateSelected }: Props)
   };
 
   const handleVaquinhaSelect = (nome: string) => {
-    setTitulo(nome); // Define o nome da vaquinha selecionada
-    setShowVaquinhas(false); // Esconde a lista
+    setTitulo(nome);
+    setShowVaquinhas(false);
   };
 
-  // Filtrar as vaquinhas com base no texto de busca
   const vaquinhasFiltradas = vaquinhas.filter((nome) =>
     nome.toLowerCase().includes(busca.toLowerCase())
   );
@@ -114,7 +118,7 @@ export default function ModalAdd({ addCard, closeModal, onDateSelected }: Props)
       </TouchableOpacity>
 
       {showVaquinhas && (
-        <View style={{ width: "80%", maxHeight: 200, backgroundColor: '#f0ffff', borderRadius: 8 }}>
+        <View style={{ width: "80%", maxHeight: 200, backgroundColor: "#f0ffff", borderRadius: 8 }}>
           <TextInput
             style={{
               padding: 10,

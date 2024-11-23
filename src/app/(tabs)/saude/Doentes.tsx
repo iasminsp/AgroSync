@@ -67,7 +67,7 @@ export default function Doentes() {
     <View style={{ flex: 1, backgroundColor: "#d7d7d7" }}>
       <View>
         <SuperiorPD />
-        <TituloPD titulo={'em tratamentos'} />
+        <TituloPD titulo={'Em tratamento'} />
 
         <TouchableOpacity onPress={() => setModalVisible(true)}>
           <MaterialIcons name="add-circle" size={30} color="#1E4034" style={{ marginLeft: "85%", marginTop: 10 }} />
@@ -107,7 +107,7 @@ export default function Doentes() {
               padding: 20,
               alignItems: 'center',
             }}>
-              <ModalAdd addCard={addCard} closeModal={() => setModalVisible(false)} onDateSelected={setSelectedDate}/>
+              <ModalAdd addCard={addCard} closeModal={() => setModalVisible(false)} onDateSelected={setSelectedDate} eventType="tratamento" />
             </View>
           </View>
         </Modal>

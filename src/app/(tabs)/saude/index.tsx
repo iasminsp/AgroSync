@@ -79,11 +79,11 @@ const Saude: React.FC = () => {
           <TouchableOpacity onPress={() => setModalVisible(true)}>
             <AntDesign name="filter" size={35} color="#1E4034"style={{ marginLeft:-80, marginTop: 5}}/>
           </TouchableOpacity>
-          <Text style={{color:'#1E4034' ,fontSize:20,alignContent: "center", fontStyle:"italic"}}>Previsoes do mes</Text>
+          <Text style={{color:'#1E4034' ,fontSize:20,alignContent: "center", fontStyle:"italic"}}>Atividades do mes</Text>
           </View>
           <CalendarAgenda events={events} /> 
-          <BotomSaude titulo={"previsao"} rota={"Previsao"}/>
-          <BotomSaude titulo={"doentes"} rota={"Doentes"}/>
+          <BotomSaude titulo={"Ciclo reprodutivo"} rota={"Previsao"}/>
+          <BotomSaude titulo={"Tratamentos/outros"} rota={"Doentes"}/>
 
           <Modal
             animationType="slide"

@@ -106,7 +106,7 @@ export default function Previsao() {
               padding: 20,
               alignItems: 'center',
             }}>
-              <ModalAdd addCard={addCard} closeModal={() => setModalVisible(false)} onDateSelected={setSelectedDate}/>
+              <ModalAdd addCard={addCard} closeModal={() => setModalVisible(false)} onDateSelected={setSelectedDate} eventType="previsao"/>
             </View>
           </View>
         </Modal>
