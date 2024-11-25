@@ -1,79 +1,62 @@
-import React from 'react'; // Importando React
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native'; // Importando componentes do React Native
-import { Ionicons } from '@expo/vector-icons'; // Importando ícones do Ionicons
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
-// Definindo a interface para as propriedades do componente
-interface VaquinhaCardProps {
-    nome: string; // Nome da vaquinha
-    onDelete: () => void; // Função a ser chamada ao deletar a vaquinha
-}
-
-// Componente funcional VaquinhaCard
-const VaquinhaCard: React.FC<VaquinhaCardProps> = ({ nome, onDelete }) => {
-    const displayName = nome || "Sem nome"; // Definindo o nome a ser exibido, com um padrão "Sem nome" se não houver nome
-
-    return (
-        <View style={styles.card}>
-            <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
-                <Ionicons name="trash" size={40} color="black" /> // Ícone de lixeira para deletar
-            </TouchableOpacity>
-
-            <View style={styles.imageContainer}>
-                <Image 
-                    source={require('../../../assets/images/vaquinha.png')} // Certifique-se de que o caminho para a logo esteja correto
-                    style={styles.logoImage}
-                />
-            </View>
-
-            <View style={styles.bottomPart}>
-                <Text style={styles.cardText}>{displayName}</Text>
-            </View>
-        </View>
-    );
+type VaquinhaCardProps = {
+  nome: string;
+  onDelete: () => void;
+  peso: string;
+  tipo: string;
+  raca: string;
+  onPress: () => void;
 };
 
-// Estilos para o componente VaquinhaCard
+const VaquinhaCard = ({ nome, onDelete, peso, tipo, raca, onPress }: VaquinhaCardProps) => {
+  return (
+    <View style={styles.card}>
+      <TouchableOpacity onPress={onPress}>
+        <View style={styles.cardContent}>
+          <Text style={styles.cardTitle}>{nome}</Text>
+          <Text style={styles.cardInfo}>Peso: {peso} kg</Text>
+          <Text style={styles.cardInfo}>Tipo: {tipo}</Text>
+          <Text style={styles.cardInfo}>Raça: {raca}</Text>
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={onDelete} style={styles.deleteButton}>
+        <Ionicons name="trash-bin" size={24} color="#FF0000" />
+      </TouchableOpacity>
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
-    card: {
-        backgroundColor: '#1E4034',
-        borderRadius: 40,
-        margin: 10,
-        width: '45%',
-        aspectRatio: 2 / 3,
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: 10,
-    },
-    deleteButton: {
-        position: 'absolute',
-        top: 10,
-        left: 10,
-        backgroundColor: 'transparent',
-    },
-    imageContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    logoImage: {
-        width: '100%',
-        height: undefined,
-        aspectRatio: 1,
-        resizeMode: 'contain',
-    },
-    bottomPart: {
-        backgroundColor: '#116D6D',
-        width: '100%',
-        borderBottomLeftRadius: 40,
-        borderBottomRightRadius: 40,
-        alignItems: 'center',
-        paddingVertical: 10,
-    },
-    cardText: {
-        color: '#E0FFD1',
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    marginBottom: 20,
+    marginHorizontal: 10,
+    padding: 15,
+    flex: 1,
+    justifyContent: 'space-between',
+    position: 'relative',
+  },
+  cardContent: {
+    marginBottom: 10,
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#1E4034',
+  },
+  cardInfo: {
+    fontSize: 14,
+    color: '#666',
+  },
+  deleteButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+  },
 });
 
 export default VaquinhaCard;

@@ -1,31 +1,46 @@
-import React, { useState } from 'react'; // Importando React e o hook useState
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput } from 'react-native'; // Importando componentes do React Native
-import { Ionicons } from '@expo/vector-icons'; // Importando ícones do Expo
-import { updateVaquinha } from '@/src/services/vaquinhaService'; // Importando a função de atualização do serviço
+import React, { useState, useEffect } from 'react'; 
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput } from 'react-native'; 
+import { Ionicons } from '@expo/vector-icons'; 
+import { updateVaquinha, getVaquinhaById } from '@/src/services/vaquinhaService'; 
 
 interface InformacoesVaquinhaProps {
     route: {
         params: {
-            id: string; // Parâmetro de rota que contém o ID da vaquinha
+            id: string; 
         };
     };
-    navigation: any; // Objeto de navegação
+    navigation: any; 
 }
 
 const InformacoesVaquinha: React.FC<InformacoesVaquinhaProps> = ({ route, navigation }) => {
-    const { id } = route.params; // Desestruturando o ID da vaquinha dos parâmetros da rota
-    const [nome, setNome] = useState(''); // Estado para o nome da vaquinha
-    const [descricao, setDescricao] = useState(''); // Estado para a descrição da vaquinha
+    const { id } = route.params; 
+    const [nome, setNome] = useState('');
+    const [descricao, setDescricao] = useState('');
+    const [peso, setPeso] = useState('');
+    const [tipo, setTipo] = useState('');
+    const [raca, setRaca] = useState('');
 
-    // Função para salvar as alterações da vaquinha
+    // Carregar dados da vaquinha ao inicializar o componente
+    useEffect(() => {
+        const fetchVaquinhaData = async () => {
+            const vaquinha = await getVaquinhaById(id);
+            setNome(vaquinha.nome);
+            setDescricao(vaquinha.descricao);
+            setPeso(vaquinha.peso);
+            setTipo(vaquinha.tipo);
+            setRaca(vaquinha.raca);
+        };
+
+        fetchVaquinhaData();
+    }, [id]);
+
     const handleSave = async () => {
-        const updatedData = { nome, descricao }; // Dados atualizados da vaquinha
-        await updateVaquinha(id, updatedData); // Chama a função de atualização com o ID e os dados atualizados
-        navigation.goBack(); // Navega de volta para a tela anterior
+        const updatedData = { nome, descricao, peso, tipo, raca }; 
+        await updateVaquinha(id, updatedData); 
+        navigation.goBack(); 
     };
 
     return (
-        // SafeAreaView para evitar sobreposição com a barra de status e o notch
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()}> 
@@ -49,6 +64,27 @@ const InformacoesVaquinha: React.FC<InformacoesVaquinhaProps> = ({ route, naviga
                     value={descricao}
                     onChangeText={setDescricao}
                 />
+                <Text style={styles.label}>Peso</Text>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Digite o peso"
+                    value={peso}
+                    onChangeText={setPeso}
+                />
+                <Text style={styles.label}>Tipo (leiteira, de corte, reprodução)</Text>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Digite o tipo"
+                    value={tipo}
+                    onChangeText={setTipo}
+                />
+                <Text style={styles.label}>Raça</Text>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Digite a raça"
+                    value={raca}
+                    onChangeText={setRaca}
+                />
             </View>
             <View style={styles.footer}>
                 <TouchableOpacity style={styles.button} onPress={handleSave}>
@@ -63,45 +99,45 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: '#fff', // Cor de fundo da tela
+        backgroundColor: '#fff',
     },
     header: {
-        flexDirection: 'row', // Layout horizontal
-        alignItems: 'center', // Alinhamento central vertical dos itens
-        marginBottom: 20, // Margem inferior
+        flexDirection: 'row', 
+        alignItems: 'center', 
+        marginBottom: 20, 
     },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginLeft: 10, // Margem à esquerda
+        marginLeft: 10, 
     },
     content: {
-        flex: 1, // O conteúdo ocupa o espaço restante
+        flex: 1, 
     },
     label: {
         fontSize: 18,
-        marginVertical: 10, // Margem vertical
+        marginVertical: 10, 
     },
     input: {
         borderWidth: 1,
-        borderColor: '#ccc', // Cor da borda
-        borderRadius: 5, // Borda arredondada
-        padding: 10, // Espaçamento interno
-        marginBottom: 20, // Margem inferior
+        borderColor: '#ccc', 
+        borderRadius: 5, 
+        padding: 10, 
+        marginBottom: 20, 
     },
     footer: {
-        flexDirection: 'row', // Layout horizontal
-        justifyContent: 'center', // Alinhamento central horizontal dos itens
+        flexDirection: 'row', 
+        justifyContent: 'center', 
     },
     button: {
-        backgroundColor: '#1E4034', // Cor de fundo do botão
-        padding: 15, // Espaçamento interno
-        borderRadius: 5, // Borda arredondada
+        backgroundColor: '#1E4034', 
+        padding: 15, 
+        borderRadius: 5, 
     },
     buttonText: {
-        color: '#fff', // Cor do texto
+        color: '#fff', 
         fontSize: 18,
-        fontWeight: 'bold', // Peso da fonte
+        fontWeight: 'bold', 
     },
 });
 

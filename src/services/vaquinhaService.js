@@ -2,11 +2,14 @@ import { addDoc, collection, getDocs, doc, updateDoc, deleteDoc } from 'firebase
 import { db } from '../../firebaseConfig'; // Ajuste o caminho conforme a estrutura do seu projeto
 
 // Função para adicionar uma nova vaquinha
-export const addVaquinha = async (nome, descricao) => {
+export const addVaquinha = async (nome, descricao, peso, tipo, raca) => {
   try {
     const docRef = await addDoc(collection(db, 'vaquinhas'), {
       nome,
       descricao,
+      peso,
+      tipo,
+      raca,
     });
     console.log('Documento adicionado com ID:', docRef.id);
   } catch (e) {
