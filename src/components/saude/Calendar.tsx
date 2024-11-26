@@ -37,7 +37,7 @@ const CalendarAgenda: React.FC<CalendarAgendaProps> = ({ events }) => {
     </View>
   );
 
-  // Cria um objeto para marcar as datas dos eventos e a data selecionada
+  
   const markedDates = events.reduce((acc, event) => {
     acc[event.date] = {
       marked: true,
@@ -46,7 +46,7 @@ const CalendarAgenda: React.FC<CalendarAgendaProps> = ({ events }) => {
     return acc;
   }, {} as { [key: string]: { marked: boolean; dotColor: string } });
 
-  // Marca a data selecionada com uma cor diferente
+  
   if (selectedDate) {
     markedDates[selectedDate] = {
       selected: true,
