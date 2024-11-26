@@ -26,7 +26,7 @@ const Index: React.FC<{ navigation: any }> = ({ navigation }) => {
 
     const renderItem = ({ item }: { item: Vaquinha }) => (
         <View style={styles.card}>
-            <Image source={require('@/assets/imagens/vaquinha.png')} style={styles.image} />
+            <Image source={require('../../../../assets/images/vaquinha.png')} style={styles.image} />
             <Text style={styles.cardTitle}>{item.nome}</Text>
             <Text style={styles.cardText}>{item.descricao}</Text>
             <TouchableOpacity 

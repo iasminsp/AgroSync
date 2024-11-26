@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
-import { db } from "../../../../firebaseConfig";
+import { db } from "../../../firebaseConfig";
 import { collection, query, where, getDocs } from 'firebase/firestore';
 
 export default function RelatorioDiario() {
@@ -18,8 +18,6 @@ export default function RelatorioDiario() {
       const dataInicio = new Date(hoje.setHours(0, 0, 0, 0)).toISOString();
       const dataFim = new Date(hoje.setHours(23, 59, 59, 999)).toISOString();
 
-      console.log("Intervalo de datas:", dataInicio, dataFim); // Debug
-
       const q = query(
         collection(db, 'vacas'),
         where('dataRegistro', '>=', dataInicio),
@@ -27,16 +25,10 @@ export default function RelatorioDiario() {
       );
 
       const querySnapshot = await getDocs(q);
-      if (querySnapshot.empty) {
-        console.log('Nenhum documento encontrado para o intervalo.');
-      }
-
       const dadosFormatados = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-
-      console.log("Dados recebidos:", dadosFormatados); // Debug
       setDados(dadosFormatados);
     } catch (error) {
       console.error('Erro ao carregar relatório diário:', error);
@@ -56,23 +48,19 @@ export default function RelatorioDiario() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Relatório Diário</Text>
-      {dados.length === 0 ? (
-        <Text style={styles.noData}>Nenhum dado disponível para hoje.</Text>
-      ) : (
-        <FlatList
-          data={dados}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View style={styles.item}>
-              <Text>ID da Vaca: {item.idVaca}</Text>
-              <Text>Litros de Leite: {item.litrosLeite}</Text>
-              <Text>Vacina: {item.vacina || 'Não informado'}</Text>
-              <Text>Alimentação: {item.alimentacao || 'Não informado'}</Text>
-              <Text>Peso: {item.peso} kg</Text>
-            </View>
-          )}
-        />
-      )}
+      <FlatList
+        data={dados}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <View style={styles.item}>
+            <Text>ID da Vaca: {item.idVaca}</Text>
+            <Text>Litros de Leite: {item.litrosLeite}</Text>
+            <Text>Vacina: {item.vacina || 'Não informado'}</Text>
+            <Text>Alimentação: {item.alimentacao || 'Não informado'}</Text>
+            <Text>Peso: {item.peso} kg</Text>
+          </View>
+        )}
+      />
     </View>
   );
 }
@@ -88,11 +76,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
-  },
-  noData: {
-    fontSize: 18,
-    textAlign: 'center',
-    color: '#888',
   },
   item: {
     backgroundColor: '#fff',

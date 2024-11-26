@@ -19,13 +19,19 @@ export const addVaquinha = async (nome, descricao, peso, tipo, raca) => {
 
 // Função para buscar todas as vaquinhas
 export const getVaquinhas = async () => {
-  const querySnapshot = await getDocs(collection(db, 'vaquinhas'));
-  const vaquinhas = [];
-  querySnapshot.forEach((doc) => {
-    vaquinhas.push({ id: doc.id, ...doc.data() });
-  });
-  return vaquinhas;
+  try {
+    const querySnapshot = await getDocs(collection(db, 'vaquinhas'));
+    const vaquinhas = [];
+    querySnapshot.forEach((doc) => {
+      vaquinhas.push({ id: doc.id, ...doc.data() });
+    });
+    return vaquinhas;
+  } catch (e) {
+    console.error('Erro ao buscar vaquinhas:', e);
+    return [];
+  }
 };
+
 
 // Função para atualizar uma vaquinha existente
 export const updateVaquinha = async (id, updatedData) => {

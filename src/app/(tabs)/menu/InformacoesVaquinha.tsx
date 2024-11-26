@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'; 
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput } from 'react-native'; 
 import { Ionicons } from '@expo/vector-icons'; 
-import { updateVaquinha, getVaquinhaById } from '@/src/services/vaquinhaService'; 
+import { updateVaquinha, getVaquinhas } from '@/src/services/vaquinhaService'; 
 
 interface InformacoesVaquinhaProps {
     route: {
@@ -23,22 +23,38 @@ const InformacoesVaquinha: React.FC<InformacoesVaquinhaProps> = ({ route, naviga
     // Carregar dados da vaquinha ao inicializar o componente
     useEffect(() => {
         const fetchVaquinhaData = async () => {
-            const vaquinha = await getVaquinhaById(id);
-            setNome(vaquinha.nome);
-            setDescricao(vaquinha.descricao);
-            setPeso(vaquinha.peso);
-            setTipo(vaquinha.tipo);
-            setRaca(vaquinha.raca);
+            try {
+                const allVaquinhas = await getVaquinhas();
+                const vaquinha = allVaquinhas.find((item) => item.id === id);
+    
+                if (vaquinha) {
+                    setNome(vaquinha.nome);
+                    setDescricao(vaquinha.descricao);
+                    setPeso(vaquinha.peso);
+                    setTipo(vaquinha.tipo);
+                    setRaca(vaquinha.raca);
+                } else {
+                    console.error('Vaquinha não encontrada');
+                }
+            } catch (e) {
+                console.error('Erro ao buscar vaquinha:', e);
+            }
         };
-
+    
         fetchVaquinhaData();
     }, [id]);
-
+    
+    
     const handleSave = async () => {
-        const updatedData = { nome, descricao, peso, tipo, raca }; 
-        await updateVaquinha(id, updatedData); 
-        navigation.goBack(); 
+        const updatedData = { nome, descricao, peso, tipo, raca };
+        try {
+            await updateVaquinha(id, updatedData);
+            navigation.goBack();
+        } catch (e) {
+            console.error('Erro ao salvar dados da vaquinha:', e);
+        }
     };
+    
 
     return (
         <SafeAreaView style={styles.container}>
