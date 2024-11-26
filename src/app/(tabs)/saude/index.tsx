@@ -75,10 +75,7 @@ const Saude: React.FC = () => {
       >
         <View>
           <SuperiorSaude titulo={"Saude"}/>
-          <View style={{ flexDirection: "row",  marginVertical: 0, justifyContent: "center", marginTop: "-3%"  }}>
-          <TouchableOpacity onPress={() => setModalVisible(true)}>
-            <AntDesign name="filter" size={35} color="#1E4034"style={{ marginLeft:-80, marginTop: 5}}/>
-          </TouchableOpacity>
+          <View style={{ flexDirection: "row",  marginVertical: 0, justifyContent: "center", marginTop: "-2%"  }}>
           <Text style={{color:'#1E4034' ,fontSize:20,alignContent: "center", fontStyle:"italic"}}>Atividades do mes</Text>
           </View>
           <CalendarAgenda events={events} /> 

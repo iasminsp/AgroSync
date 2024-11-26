@@ -1,104 +1,104 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
-import { db } from "../../../../firebaseConfig";
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,Image
+} from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { useNavigation } from "@react-navigation/native";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
-export default function RelatorioDiario() {
-  const [dados, setDados] = useState<any[]>([]);
-  const [carregando, setCarregando] = useState(true);
+const Relatorio: React.FC = () => {
+  const navigation = useNavigation();
+  const [date, setDate] = useState(new Date());
+  const [show, setShow] = useState(false);
 
-  useEffect(() => {
-    carregarRelatorio();
-  }, []);
-
-  const carregarRelatorio = async () => {
-    setCarregando(true);
-    try {
-      const hoje = new Date();
-      const dataInicio = new Date(hoje.setHours(0, 0, 0, 0)).toISOString();
-      const dataFim = new Date(hoje.setHours(23, 59, 59, 999)).toISOString();
-
-      console.log("Intervalo de datas:", dataInicio, dataFim); // Debug
-
-      const q = query(
-        collection(db, 'vacas'),
-        where('dataRegistro', '>=', dataInicio),
-        where('dataRegistro', '<=', dataFim)
-      );
-
-      const querySnapshot = await getDocs(q);
-      if (querySnapshot.empty) {
-        console.log('Nenhum documento encontrado para o intervalo.');
-      }
-
-      const dadosFormatados = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-
-      console.log("Dados recebidos:", dadosFormatados); // Debug
-      setDados(dadosFormatados);
-    } catch (error) {
-      console.error('Erro ao carregar relatório diário:', error);
-    } finally {
-      setCarregando(false);
-    }
+  const handleGerarRelatorio = () => {
+    navigation.navigate("relatorioDia");
   };
 
-  if (carregando) {
-    return (
-      <View style={styles.container}>
-        <Text>Carregando relatório...</Text>
-      </View>
-    );
-  }
+  const onChange = (event: any, selectedDate?: Date) => {
+    const currentDate = selectedDate || date;
+    setShow(false);
+    setDate(currentDate);
+  };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Relatório Diário</Text>
-      {dados.length === 0 ? (
-        <Text style={styles.noData}>Nenhum dado disponível para hoje.</Text>
-      ) : (
-        <FlatList
-          data={dados}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View style={styles.item}>
-              <Text>ID da Vaca: {item.idVaca}</Text>
-              <Text>Litros de Leite: {item.litrosLeite}</Text>
-              <Text>Vacina: {item.vacina || 'Não informado'}</Text>
-              <Text>Alimentação: {item.alimentacao || 'Não informado'}</Text>
-              <Text>Peso: {item.peso} kg</Text>
-            </View>
-          )}
-        />
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Relatórios</Text>
+        <TouchableOpacity
+        onPress={() => setShow(true)}
+        style={styles.dateButton}
+      >
+        <AntDesign name="calendar" size={20} color="#fff" />
+      </TouchableOpacity>
+
+      {show && (
+        <DateTimePicker value={date} mode="date" display="default" onChange={onChange} />
       )}
+      </View>
+      <TouchableOpacity
+        style={styles.gerarRelatorioButton}
+        onPress={handleGerarRelatorio}
+      >
+        <Text style={styles.buttonText}>Gerar Relatório</Text>
+      </TouchableOpacity>
+      <Text style={{ color: "#0E5959", fontSize: 18,marginLeft:'65%', }}>{date.toLocaleDateString()}</Text>
+      <Image source={require('../../../../assets/images/Manchinha.png')} style={styles.image} />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: "#d4d4d4",
   },
-  title: {
+  header: {
+    backgroundColor: "#0E5959",
+    height: 150,
+    borderBottomLeftRadius: 50,
+    borderBottomRightRadius: 50,
+    paddingHorizontal: 20,
+    justifyContent: "center",
+    position: "relative",
+  },
+  headerText: {
     fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
+    fontWeight: "bold",
+    color: "#fff",
   },
-  noData: {
-    fontSize: 18,
-    textAlign: 'center',
-    color: '#888',
+  dateButton: {
+    position: "absolute",
+    top: 37,
+    right: 20,
+    backgroundColor: "#4CAF50",
+    padding: 10,
+    borderRadius: 50,
   },
-  item: {
-    backgroundColor: '#fff',
+  gerarRelatorioButton: {
+    marginTop: '50%',
+    backgroundColor: '#1E4034',
+    borderRadius: 10,
     padding: 15,
-    borderRadius: 8,
-    marginBottom: 10,
-    elevation: 3,
+    marginLeft:'10%',
+    width:'80%',
+    alignItems: "center",
+    justifyContent: "center",
   },
+  buttonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  image:{
+    marginTop: '52%',
+    borderRadius: 10,
+    padding: 0,
+    alignItems: 'flex-end',
+  }
 });
+
+export default Relatorio;

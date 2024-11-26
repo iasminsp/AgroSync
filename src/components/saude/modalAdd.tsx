@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Text, TouchableOpacity, View, FlatList, TextInput } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { getVaquinhas } from "@/src/services/vaquinhaService";
+import React from "react";
 
 interface Props {
   addCard: (titulo: string, descricao: string, data: Date) => void;

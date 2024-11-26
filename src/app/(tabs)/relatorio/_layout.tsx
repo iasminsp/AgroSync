@@ -8,6 +8,10 @@ const LayoutRelatorio = () => {
         name="index" 
         options={{ headerShown: false }} 
       />
+      <Stack.Screen
+          name="relatorioDia"
+          options={{ headerShown: true }}
+        />
     </Stack>
   )
 }

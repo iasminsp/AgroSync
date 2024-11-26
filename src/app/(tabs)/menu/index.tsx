@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { getVaquinhas } from '@/src/services/vaquinhaService';
+import { useNavigation } from "@react-navigation/native";
 
 interface Vaquinha {
     id: string;
@@ -23,20 +24,26 @@ const Index: React.FC<{ navigation: any }> = ({ navigation }) => {
 
         fetchVaquinhas();
     }, []);
+    
+    
 
     const renderItem = ({ item }: { item: Vaquinha }) => (
-        <View style={styles.card}>
-            <Image source={require('../../../../assets/images/vaquinha.png')} style={styles.image} />
-            <Text style={styles.cardTitle}>{item.nome}</Text>
-            <Text style={styles.cardText}>{item.descricao}</Text>
-            <TouchableOpacity 
-                style={styles.button}
-                onPress={() => navigation.navigate('InformacoesVaquinha', { id: item.id })} 
-            >
-                <Text style={styles.buttonText}>Ver Detalhes</Text>
-            </TouchableOpacity>
+        <View style={styles.cardContainer}>
+            <View style={styles.card}>
+                <Image source={require('../../../../assets/images/vaquinha.png')} style={styles.image} />
+                <Text style={styles.cardTitle}>{item.nome}</Text>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={handle}
+                >
+                    <Text style={styles.buttonText}>Ver Detalhes</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
+    const handle = () => {
+        navigation.navigate("informacoesVaquinha");
+      };
 
     return (
         <View style={styles.container}>
@@ -60,8 +67,8 @@ const Index: React.FC<{ navigation: any }> = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20,
-        backgroundColor: '#fff',
+        padding: 30,
+        backgroundColor: "#d4d4d4",
     },
     header: {
         flexDirection: 'row',
@@ -74,13 +81,22 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     list: {
-        paddingBottom: 20,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+        paddingBottom: 16, // Reduzi o espaçamento inferior da lista
+    },
+    cardContainer: {
+        width: '100%', // Ajusta dois cards por linha
+        marginBottom: 27, // Reduz o espaço entre os cards verticais
     },
     card: {
-        backgroundColor: '#f9f9f9',
-        padding: 15,
+        backgroundColor: '#1E4034',
+        height: 160, // Altura ajustada para centralizar o botão
         borderRadius: 10,
-        marginBottom: 15,
+        justifyContent: 'center', // Centraliza os itens no card
+        alignItems: 'center',
+        padding: 30,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.1,
@@ -88,32 +104,29 @@ const styles = StyleSheet.create({
         elevation: 2,
     },
     image: {
-        width: '100%',
-        height: 150,
+        width: 80,
+        height: 80,
+        marginBottom: 10,
         borderRadius: 10,
     },
     cardTitle: {
-        fontSize: 20,
+        fontSize: 14,
         fontWeight: 'bold',
-        marginTop: 10,
-    },
-    cardText: {
-        fontSize: 16,
-        marginVertical: 5,
-        color: '#555',
+        textAlign: 'center',
+        marginBottom: 10, // Espaçamento entre o título e o botão
     },
     button: {
-        backgroundColor: '#1E4034',
-        padding: 10,
+        backgroundColor: '#0E5959',
+        paddingVertical: 5,
+        paddingHorizontal: 10,
         borderRadius: 5,
-        alignItems: 'center',
-        marginTop: 10,
     },
     buttonText: {
         color: '#fff',
-        fontSize: 16,
+        fontSize: 12,
         fontWeight: 'bold',
     },
 });
+
 
 export default Index;
