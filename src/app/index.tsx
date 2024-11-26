@@ -2,7 +2,7 @@ import { SafeAreaView, StyleSheet, View, Image, Text, KeyboardAvoidingView, Plat
 import { FontProvider } from "../components/fonts"
 import { GestureHandlerRootView, ScrollView } from "react-native-gesture-handler"
 import { StatusBar } from "expo-status-bar"
-import assets from "../components/imagens"
+import assets from "../components/imagem"
 import SignIn from "./(auth)/sign-in"
 
 
