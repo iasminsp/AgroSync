@@ -5,13 +5,13 @@ import {
   StyleSheet,
   ActivityIndicator,
   TouchableOpacity,
-  SafeAreaView,
 } from "react-native";
 import { BarChart } from "react-native-gifted-charts";
 import { db } from "../../../../firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 import FormularioDia from "../../../components/despesas/FormularioDia";
 import SuperiorVacas from "@/src/components/despesas/superiorVacas";
+
 const GraficoVaquinhas = () => {
   const [dadosGrafico, setDadosGrafico] = useState<any[]>([]);
   const [estaCarregando, setEstaCarregando] = useState<boolean>(true);
@@ -27,32 +27,28 @@ const GraficoVaquinhas = () => {
       const querySnapshot = await getDocs(collection(db, "vaquinhas"));
       const vaquinhas = querySnapshot.docs.map((doc) => ({
         nome: doc.data().nome || "Sem Nome",
-        descricao: parseInt(doc.data().descricao.replace(/\D/g, "")) || 0,
+        descricao: doc.data().descricao || "Sem Descrição",
       }));
 
-      const agrupadoPorNome = vaquinhas.reduce((acc, vaquinha) => {
-        if (!acc[vaquinha.nome]) {
-          acc[vaquinha.nome] = { total: 0 };
+      // Agrupar por descrição
+      const agrupadoPorDescricao = vaquinhas.reduce((acc, vaquinha) => {
+        const descricao = vaquinha.descricao;
+        if (!acc[descricao]) {
+          acc[descricao] = { total: 0 };
         }
-        acc[vaquinha.nome].total += vaquinha.descricao;
+        acc[descricao].total += 1; // Contar ocorrências
         return acc;
       }, {});
 
-      const totalGeral = Object.values(agrupadoPorNome).reduce(
-        (soma, item: any) => soma + item.total,
-        0
-      );
-
-      const dadosFormatados = Object.keys(agrupadoPorNome).map((nome) => {
-        const total = agrupadoPorNome[nome].total;
-        const porcentagem =
-          totalGeral > 0 ? ((total / totalGeral) * 100).toFixed(2) : "0.00";
+      const dadosFormatados = Object.keys(agrupadoPorDescricao).map((descricao) => {
+        const total = agrupadoPorDescricao[descricao].total;
         return {
-          label: nome,
-          value: parseFloat(porcentagem),
+          label: descricao, // Exibir a descrição no rótulo
+          value: total, // Quantidade de vacas com a mesma descrição
         };
       });
 
+      // Definir dados para o gráfico
       setDadosGrafico(dadosFormatados);
     } catch (e) {
       console.error("Erro ao carregar vaquinhas:", e);
@@ -65,7 +61,7 @@ const GraficoVaquinhas = () => {
   if (estaCarregando) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator size="large" color="#4CAF50" />
+        <ActivityIndicator size="large" color="black" />
         <Text>Carregando gráfico...</Text>
       </View>
     );
@@ -80,50 +76,45 @@ const GraficoVaquinhas = () => {
   }
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#1E4034'}}>
-      <View style={styles.wrapper}>
-        <View style={styles.container}>
-          <SuperiorVacas titulo="Grafico" />
-          <Text style={styles.title}>Gráfico de Vaquinhas (Porcentagens)</Text>
-          <BarChart
-            data={dadosGrafico}
-            width={350}
-            height={250}
-            barWidth={25}
-            barBorderRadius={4}
-            frontColor="#4CAF50"
-            yAxisTextStyle={{ color: "gray", fontSize: 12 }}
-            xAxisLabelTextStyle={{ color: "gray", fontSize: 12 }}
-            yAxisLabelFormatter={(value) => `${value}%`}
-            style={{
-              marginVertical: 8,
-              borderRadius: 16,
-            }}
-          />
-          <TouchableOpacity
-            onPress={carregarVaquinhas}
-            style={styles.button}
-          >
-            <Text style={styles.buttonText}>Atualizar Gráfico</Text>
-          </TouchableOpacity>
-          <FormularioDia titulo={"Formulário Dia a Dia"} rota={"formularioDia"} />
-        </View>
+    <View style={styles.wrapper}>
+      <View style={styles.container}>
+        <SuperiorVacas titulo="Gráfico" />
+        <Text style={styles.title}>Distribuição de Vacas por Tipo</Text>
+        <BarChart
+          data={dadosGrafico}
+          width={350}
+          height={250}
+          barWidth={25}
+          barBorderRadius={4}
+          frontColor="#0E5959"
+          yAxisTextStyle={{ color: "#000", fontSize: 13 }}
+          xAxisLabelTextStyle={{ color: "#000", fontSize: 13 }}
+          style={{
+            marginVertical: 8,
+            borderRadius: 16,
+          }}
+        />
+        <TouchableOpacity onPress={carregarVaquinhas} style={styles.button}>
+          <Text style={styles.buttonText}>Atualizar Gráfico</Text>
+        </TouchableOpacity>
+        <FormularioDia titulo={"Formulário Dia a Dia"} rota={"formularioDia"} />
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#D3D3D3",
+   
   },
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     padding: 16,
-    marginTop: '0%', // Compensar a altura do cabeçalho
+    marginTop: "0%", // Compensar a altura do cabeçalho
   },
   title: {
     fontSize: 20,
