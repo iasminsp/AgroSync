@@ -76,7 +76,7 @@ const Saude: React.FC = () => {
       >
         <View>
           <SuperiorSaude titulo={"Saude"}/>
-          <View style={{ flexDirection: "row",  marginVertical: 0, justifyContent: "center", marginTop: "-2%"  }}>
+          <View style={{ flexDirection: "row",  marginVertical: 0, justifyContent: "center", marginTop: "-8%"  }}>
           <Text style={{color:'#1E4034', fontSize:20, alignContent: "center", fontStyle:"italic"}}>Atividades do mes</Text>
           </View>
           <CalendarAgenda events={events} /> 

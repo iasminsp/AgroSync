@@ -63,10 +63,10 @@ const CalendarAgenda: React.FC<CalendarAgendaProps> = ({ events }) => {
         margin: '4%',
         borderRadius: 20,
         marginTop: '5%',
-        marginBottom: '4%',
+        marginBottom: '0%',
         alignItems: 'center',
         width: '92%',
-        height: '48%',
+        height: '49%',
       }}
     >
       <Text
