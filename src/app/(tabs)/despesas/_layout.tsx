@@ -8,6 +8,10 @@ const LayoutDespesas = () => {
         name="index" 
         options={{ headerShown: false }} 
       />
+      <Stack.Screen 
+        name="formularioDia" 
+        options={{ headerShown: false }} 
+      />
     </Stack>
   )
 }

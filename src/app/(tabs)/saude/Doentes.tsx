@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Modal, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Modal, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import CardSaude from '../../../components/saude/CardSaude';
 import SuperiorPD from '../../../components/saude/superiorPD';
@@ -64,54 +64,56 @@ export default function Doentes() {
   }, []);
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#d7d7d7" }}>
-      <View>
-        <SuperiorPD />
-        <TituloPD titulo={'Em tratamento'} />
+    <SafeAreaView style={{flex: 1, backgroundColor: '#1E4034'}}>
+      <View style={{ flex: 1, backgroundColor: "#d7d7d7" }}>
+        <View>
+          <SuperiorPD />
+          <TituloPD titulo={'Em tratamento'} />
 
-        <TouchableOpacity onPress={() => setModalVisible(true)}>
-          <MaterialIcons name="add-circle" size={30} color="#1E4034" style={{ marginLeft: "85%", marginTop: 10 }} />
-        </TouchableOpacity>
-        
-        <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
-          {/* Renderiza os cartões dinamicamente */}
-          {cards.map((card, index) => (
-            <CardSaude 
-                key={index}
-                id={card.id} 
-                titulo={card.titulo} 
-                descricao={card.descricao} 
-                selectedDate={card.data} // Passa a data para o CardSaude
-                onDateSelected={(date) => console.log('Data selecionada:', date)} // Função para lidar com a seleção de data
-                deleteCard={deleteCard}/>
-          ))}
-        </ScrollView>
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
+            <MaterialIcons name="add-circle" size={30} color="#1E4034" style={{ marginLeft: "85%", marginTop: 10 }} />
+          </TouchableOpacity>
+          
+          <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
+            {/* Renderiza os cartões dinamicamente */}
+            {cards.map((card, index) => (
+              <CardSaude 
+                  key={index}
+                  id={card.id} 
+                  titulo={card.titulo} 
+                  descricao={card.descricao} 
+                  selectedDate={card.data} // Passa a data para o CardSaude
+                  onDateSelected={(date) => console.log('Data selecionada:', date)} // Função para lidar com a seleção de data
+                  deleteCard={deleteCard}/>
+            ))}
+          </ScrollView>
 
-        {/* Modal para adicionar o card */}
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => setModalVisible(false)}
-        >
-          <View style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            margin: 5,
-          }}>
+          {/* Modal para adicionar o card */}
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => setModalVisible(false)}
+          >
             <View style={{
-              width: '90%',
-              height: '80%',
-              borderRadius: 20,
-              padding: 20,
+              flex: 1,
+              justifyContent: 'center',
               alignItems: 'center',
+              margin: 5,
             }}>
-              <ModalAdd addCard={addCard} closeModal={() => setModalVisible(false)} onDateSelected={setSelectedDate} eventType="tratamento" />
+              <View style={{
+                width: '90%',
+                height: '80%',
+                borderRadius: 20,
+                padding: 20,
+                alignItems: 'center',
+              }}>
+                <ModalAdd addCard={addCard} closeModal={() => setModalVisible(false)} onDateSelected={setSelectedDate} eventType="tratamento" />
+              </View>
             </View>
-          </View>
-        </Modal>
+          </Modal>
+        </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   TouchableOpacity,
+  SafeAreaView,
 } from "react-native";
 import { BarChart } from "react-native-gifted-charts";
 import { db } from "../../../../firebaseConfig";
@@ -79,34 +80,36 @@ const GraficoVaquinhas = () => {
   }
 
   return (
-    <View style={styles.wrapper}>
-      <View style={styles.container}>
-      <SuperiorVacas titulo="Grafico" />
-      <Text style={styles.title}>Gráfico de Vaquinhas (Porcentagens)</Text>
-      <BarChart
-        data={dadosGrafico}
-        width={350}
-        height={250}
-        barWidth={25}
-        barBorderRadius={4}
-        frontColor="#4CAF50"
-        yAxisTextStyle={{ color: "gray", fontSize: 12 }}
-        xAxisLabelTextStyle={{ color: "gray", fontSize: 12 }}
-        yAxisLabelFormatter={(value) => `${value}%`}
-        style={{
-          marginVertical: 8,
-          borderRadius: 16,
-        }}
-      />
-      <TouchableOpacity
-        onPress={carregarVaquinhas}
-        style={styles.button}
-      >
-        <Text style={styles.buttonText}>Atualizar Gráfico</Text>
-      </TouchableOpacity>
-      <FormularioDia titulo={"Formulário Dia a Dia"} rota={"formularioDia"} />
-    </View>
-    </View>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#1E4034'}}>
+      <View style={styles.wrapper}>
+        <View style={styles.container}>
+          <SuperiorVacas titulo="Grafico" />
+          <Text style={styles.title}>Gráfico de Vaquinhas (Porcentagens)</Text>
+          <BarChart
+            data={dadosGrafico}
+            width={350}
+            height={250}
+            barWidth={25}
+            barBorderRadius={4}
+            frontColor="#4CAF50"
+            yAxisTextStyle={{ color: "gray", fontSize: 12 }}
+            xAxisLabelTextStyle={{ color: "gray", fontSize: 12 }}
+            yAxisLabelFormatter={(value) => `${value}%`}
+            style={{
+              marginVertical: 8,
+              borderRadius: 16,
+            }}
+          />
+          <TouchableOpacity
+            onPress={carregarVaquinhas}
+            style={styles.button}
+          >
+            <Text style={styles.buttonText}>Atualizar Gráfico</Text>
+          </TouchableOpacity>
+          <FormularioDia titulo={"Formulário Dia a Dia"} rota={"formularioDia"} />
+        </View>
+      </View>
+    </SafeAreaView>
   );
 };
 

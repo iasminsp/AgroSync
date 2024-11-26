@@ -12,7 +12,7 @@ const SuperiorSaude: React.FC<SuperiorProps> = ({ titulo }) => {
         position: 'relative',
         backgroundColor: '#1E4034',
         width: '100%',
-        height: '11%', // Ajuste de altura para porcentagem
+        height: '10%', // Ajuste de altura para porcentagem
         // shadowColor: '#000',
         // shadowOffset: { width: 0, height: 2 },
         // shadowOpacity: 0.25,
@@ -27,12 +27,12 @@ const SuperiorSaude: React.FC<SuperiorProps> = ({ titulo }) => {
           bottom: '-15%', // Ajustado para porcentagem
           width: '100%',
           height: '50%', // Ajustado para porcentagem
-          borderTopLeftRadius: 100,
-          borderTopRightRadius: 90,
+          borderTopLeftRadius: 30,
+          borderTopRightRadius: 30,
           backgroundColor: '#d7d7d7',
         }}
       />
-      <View style={{ position: 'absolute', left: '10%', top: '25%' }}>
+      <View style={{ position: 'absolute', left: '10%', top: '5%' }}>
         <Text style={{ color: 'white', fontSize: 22, fontStyle: 'italic' }}>
           {titulo}
         </Text>

@@ -4,6 +4,7 @@ import { GestureHandlerRootView, ScrollView } from "react-native-gesture-handler
 import { StatusBar } from "expo-status-bar"
 import assets from "../components/imagem"
 import SignIn from "./(auth)/sign-in"
+import React from "react"
 
 
 const App = () => {

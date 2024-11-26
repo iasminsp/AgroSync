@@ -3,11 +3,13 @@ import {
   View,
   Text,
   TouchableOpacity,
-  StyleSheet,Image
+  StyleSheet,Image,
+  SafeAreaView
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useNavigation } from "@react-navigation/native";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { StatusBar } from "expo-status-bar";
 
 const Relatorio: React.FC = () => {
   const navigation = useNavigation();
@@ -25,29 +27,34 @@ const Relatorio: React.FC = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Relatórios</Text>
-        <TouchableOpacity
-        onPress={() => setShow(true)}
-        style={styles.dateButton}
-      >
-        <AntDesign name="calendar" size={20} color="#fff" />
-      </TouchableOpacity>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#0E5959'}}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>Relatórios</Text>
+          <TouchableOpacity
+          onPress={() => setShow(true)}
+          style={styles.dateButton}
+        >
+          <AntDesign name="calendar" size={20} color="#fff" />
+        </TouchableOpacity>
 
-      {show && (
-        <DateTimePicker value={date} mode="date" display="default" onChange={onChange} />
-      )}
+        {show && (
+          <DateTimePicker value={date} mode="date" display="default" onChange={onChange} />
+        )}
+        </View>
+        <TouchableOpacity
+          style={styles.gerarRelatorioButton}
+          onPress={handleGerarRelatorio}
+        >
+          <Text style={styles.buttonText}>Gerar Relatório</Text>
+        </TouchableOpacity>
+        <Text style={{ color: "#0E5959", fontSize: 18,marginLeft:'65%', }}>{date.toLocaleDateString()}</Text>
+        <Image source={require('../../../../assets/images/Manchinha.png')} style={styles.image} />
       </View>
-      <TouchableOpacity
-        style={styles.gerarRelatorioButton}
-        onPress={handleGerarRelatorio}
-      >
-        <Text style={styles.buttonText}>Gerar Relatório</Text>
-      </TouchableOpacity>
-      <Text style={{ color: "#0E5959", fontSize: 18,marginLeft:'65%', }}>{date.toLocaleDateString()}</Text>
-      <Image source={require('../../../../assets/images/Manchinha.png')} style={styles.image} />
-    </View>
+      <StatusBar
+        style="light"
+      />
+    </SafeAreaView>
   );
 };
 

@@ -11,10 +11,10 @@ const SuperiorPD: React.FC<SuperiorProps> = () => {
         backgroundColor: '#1E4034',
         width: '100%',
         height: 95,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
+        // shadowColor: '#000',
+        // shadowOffset: { width: 0, height: 2 },
+        // shadowOpacity: 0.25,
+        // shadowRadius: 3.84,
         elevation: 5,
       }}
     >
@@ -25,8 +25,8 @@ const SuperiorPD: React.FC<SuperiorProps> = () => {
           bottom: '-35%', // Move a borda arredondada mais para baixo, em porcentagem
           width: '100%',
           height: '100%',
-          borderTopLeftRadius: 70, // Mantém o arredondamento
-          borderTopRightRadius: 70,
+          borderTopLeftRadius: 30, // Mantém o arredondamento
+          borderTopRightRadius: 30,
           backgroundColor: '#d7d7d7', // Cor de fundo para combinar
         }}
       />

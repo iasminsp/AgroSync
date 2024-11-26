@@ -9,6 +9,7 @@ import Modalfiltro from '@/src/components/saude/modalFiltro'
 import CalendarAgenda from '@/src/components/saude/Calendar'
 import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from "../../../../firebaseConfig";
+import { StatusBar } from 'expo-status-bar'
 
 
 interface Card {
@@ -76,7 +77,7 @@ const Saude: React.FC = () => {
         <View>
           <SuperiorSaude titulo={"Saude"}/>
           <View style={{ flexDirection: "row",  marginVertical: 0, justifyContent: "center", marginTop: "-2%"  }}>
-          <Text style={{color:'#1E4034' ,fontSize:20,alignContent: "center", fontStyle:"italic"}}>Atividades do mes</Text>
+          <Text style={{color:'#1E4034', fontSize:20, alignContent: "center", fontStyle:"italic"}}>Atividades do mes</Text>
           </View>
           <CalendarAgenda events={events} /> 
           <BotomSaude titulo={"Ciclo reprodutivo"} rota={"Previsao"}/>
@@ -108,6 +109,9 @@ const Saude: React.FC = () => {
           </Modal>
         </View>
       </View>
+      <StatusBar
+        style='light'
+      />
     </SafeAreaView>
   )
 }

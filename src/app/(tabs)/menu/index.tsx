@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, FlatList, StyleSheet, Image } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, StyleSheet, Image, SafeAreaView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { getVaquinhas } from '@/src/services/vaquinhaService';
 import { useNavigation } from "@react-navigation/native";
+import { StatusBar } from 'expo-status-bar';
 
 interface Vaquinha {
     id: string;
@@ -46,21 +47,27 @@ const Index: React.FC<{ navigation: any }> = ({ navigation }) => {
       };
 
     return (
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.headerTitle}>Vaquinhas</Text>
-                <TouchableOpacity onPress={() => navigation.navigate('AdicionarVaquinha')}>
-                    <Ionicons name="add-circle" size={30} color="#1E4034" />
-                </TouchableOpacity>
-            </View>
+        <SafeAreaView style={{flex: 1, backgroundColor: '#d4d4d4'}}>
+            <View style={styles.container}>
+                <View style={styles.header}>
+                    <Text style={styles.headerTitle}>Vaquinhas</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate('AdicionarVaquinha')}>
+                        <Ionicons name="add-circle" size={30} color="#1E4034" />
+                    </TouchableOpacity>
+                </View>
 
-            <FlatList
-                data={vaquinhas}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-                contentContainerStyle={styles.list}
+                <FlatList
+                    data={vaquinhas}
+                    renderItem={renderItem}
+                    keyExtractor={(item) => item.id}
+                    contentContainerStyle={styles.list}
+                />
+            </View>
+            <StatusBar 
+                style='dark'
+                backgroundColor='#d4d4d4'
             />
-        </View>
+        </SafeAreaView>
     );
 };
 

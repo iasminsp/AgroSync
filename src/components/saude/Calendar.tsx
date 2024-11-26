@@ -59,14 +59,14 @@ const CalendarAgenda: React.FC<CalendarAgendaProps> = ({ events }) => {
     <View
       style={{
         backgroundColor: '#1E4034',
-        padding: '1%',
+        padding: '3%',
         margin: '4%',
         borderRadius: 20,
         marginTop: '5%',
         marginBottom: '4%',
         alignItems: 'center',
         width: '92%',
-        height: '46%',
+        height: '48%',
       }}
     >
       <Text
