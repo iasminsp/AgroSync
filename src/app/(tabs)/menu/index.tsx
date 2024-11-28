@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, FlatList, StyleSheet, Image, SafeAreaView } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, StyleSheet, Image, SafeAreaView, Modal, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { getVaquinhas, addVaquinha, deleteVaquinha } from '@/src/services/vaquinhaService';
 import { router } from 'expo-router';
@@ -12,10 +12,24 @@ interface Vaquinha {
   peso: string;
   tipo: string;
   raca: string;
+  setor: string;
+  dataNascimento: string;
+  sexo: string;
 }
 
 const Index: React.FC = () => {
   const [vaquinhas, setVaquinhas] = useState<Vaquinha[]>([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [newVaquinha, setNewVaquinha] = useState<Omit<Vaquinha, 'id'>>({
+    nome: '',
+    descricao: '',
+    peso: '',
+    tipo: '',
+    raca: '',
+    setor: '',
+    dataNascimento: '',
+    sexo: ''
+  });
 
   useEffect(() => {
     const fetchVaquinhas = async () => {
@@ -37,18 +51,26 @@ const Index: React.FC = () => {
 
   const handleAdd = async () => {
     try {
-      const newVaquinha: Omit<Vaquinha, 'id'> = {
+      const docRef = await addVaquinha(newVaquinha.nome, newVaquinha.descricao, newVaquinha.peso, newVaquinha.tipo, newVaquinha.raca, newVaquinha.setor, newVaquinha.dataNascimento, newVaquinha.sexo);
+      setVaquinhas((prevVaquinhas) => [...prevVaquinhas, { ...newVaquinha, id: docRef.id }]);
+      setModalVisible(false);
+      setNewVaquinha({
         nome: '',
         descricao: '',
         peso: '',
         tipo: '',
         raca: '',
-      };
-      const docRef = await addVaquinha(newVaquinha.nome, newVaquinha.descricao, newVaquinha.peso, newVaquinha.tipo, newVaquinha.raca);
-      setVaquinhas((prevVaquinhas) => [...prevVaquinhas, { ...newVaquinha, id: docRef.id }]);
+        setor: '',
+        dataNascimento: '',
+        sexo: ''
+      });
     } catch (e) {
       console.error('Erro ao adicionar vaquinha:', e);
     }
+  };
+
+  const handleInputChange = (field: keyof Omit<Vaquinha, 'id'>, value: string) => {
+    setNewVaquinha((prevVaquinha) => ({ ...prevVaquinha, [field]: value }));
   };
 
   const handleNavigate = (id: string) => {
@@ -81,7 +103,7 @@ const Index: React.FC = () => {
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Vaquinhas</Text>
-          <TouchableOpacity onPress={handleAdd}>
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
             <Ionicons name="add-circle" size={30} color="#1E4034" />
           </TouchableOpacity>
         </View>
@@ -93,6 +115,44 @@ const Index: React.FC = () => {
         />
       </View>
       <StatusBar style="dark" backgroundColor="#d4d4d4" />
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.modalView}>
+          <Text style={styles.modalTitle}>Adicionar Vaquinha</Text>
+          <TextInput
+  style={styles.input}
+  placeholder="Nome"
+  value={newVaquinha.nome}
+  onChangeText={(text) => handleInputChange('nome', text)}
+/>
+<TextInput
+  style={styles.input}
+  placeholder="Raça"
+  value={newVaquinha.raca}
+  onChangeText={(text) => handleInputChange('raca', text)}
+/>
+<TextInput
+  style={styles.input}
+  placeholder="Peso"
+  value={newVaquinha.peso}
+  onChangeText={(text) => handleInputChange('peso', text)}
+/>
+
+          <TouchableOpacity style={styles.button} onPress={handleAdd}>
+            <Text style={styles.buttonText}>Adicionar</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => setModalVisible(false)}>
+            <Text style={styles.buttonText}>Cancelar</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -164,6 +224,40 @@ const styles = StyleSheet.create({
     top: 5,
     left: 5,
     padding: 5,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalTitle: {
+    fontSize: 20,
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  input: {
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+  },
+  button: {
+    backgroundColor: '#1E4034',
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 10,
   },
 });
 
