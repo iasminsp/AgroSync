@@ -1,6 +1,5 @@
 import React from 'react';
 import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 
 const LayoutMenu = () => {
   return (
@@ -8,11 +7,11 @@ const LayoutMenu = () => {
       <Stack.Screen 
         name="index" 
         options={{ headerShown: false }} 
-        />
+      />
       <Stack.Screen
-          name="relatorioDia"
-          options={{ headerShown: true }}
-          />
+        name="informacoesVaquinha"
+        options={{ headerShown: true }}
+      />
     </Stack>
   );
 };
