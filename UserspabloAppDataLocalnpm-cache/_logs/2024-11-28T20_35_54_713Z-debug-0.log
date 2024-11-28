@@ -1,0 +1,19 @@
+0 verbose cli C:\Program Files\nodejs\node.exe C:\Users\pablo\AppData\Roaming\npm\node_modules\npm\bin\npm-cli.js
+1 info using npm@10.9.1
+2 info using node@v20.17.0
+3 silly config load:file:C:\Users\pablo\AppData\Roaming\npm\node_modules\npm\npmrc
+4 silly config load:file:C:\Users\pablo\OneDrive\Documentos\GitHub\AgroSync\.npmrc
+5 silly config load:file:C:\Users\pablo\.npmrc
+6 silly config load:file:C:\Users\pablo\AppData\Roaming\npm\etc\npmrc
+7 verbose title npm exec expo start
+8 verbose argv "exec" "--" "expo" "start"
+9 verbose logfile logs-max:10 dir:C:\Users\pablo\OneDrive\Documentos\GitHub\AgroSync\UserspabloAppDataLocalnpm-cache\_logs\2024-11-28T20_35_54_713Z-
+10 verbose logfile C:\Users\pablo\OneDrive\Documentos\GitHub\AgroSync\UserspabloAppDataLocalnpm-cache\_logs\2024-11-28T20_35_54_713Z-debug-0.log
+11 silly logfile start cleaning logs, removing 1 files
+12 silly logfile done cleaning log files
+13 verbose cwd C:\Users\pablo\OneDrive\Documentos\GitHub\AgroSync
+14 verbose os Windows_NT 10.0.22631
+15 verbose node v20.17.0
+16 verbose npm  v10.9.1
+17 verbose exit 0
+18 info ok
