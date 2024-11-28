@@ -1,0 +1,30 @@
+0 verbose cli C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js
+1 info using npm@10.8.2
+2 info using node@v20.17.0
+3 silly config load:file:C:\Program Files\nodejs\node_modules\npm\npmrc
+4 silly config load:file:C:\Users\pablo\.npmrc
+5 silly config load:file:C:\Users\pablo\AppData\Roaming\npm\etc\npmrc
+6 verbose title npm install npm@10.9.
+7 verbose argv "install" "--global" "npm@10.9."
+8 verbose logfile logs-max:10 dir:C:\Users\pablo\OneDrive\Documentos\GitHub\AgroSync\UserspabloAppDataLocalnpm-cache\_logs\2024-11-28T17_53_09_675Z-
+9 verbose logfile C:\Users\pablo\OneDrive\Documentos\GitHub\AgroSync\UserspabloAppDataLocalnpm-cache\_logs\2024-11-28T17_53_09_675Z-debug-0.log
+10 silly logfile done cleaning log files
+11 http fetch GET 200 https://registry.npmjs.org/npm 264ms (cache miss)
+12 verbose type tag
+13 verbose stack npm: No matching version found for npm@10.9..
+13 verbose stack     at module.exports (C:\Program Files\nodejs\node_modules\npm\node_modules\npm-pick-manifest\lib\index.js:215:23)
+13 verbose stack     at RegistryFetcher.manifest (C:\Program Files\nodejs\node_modules\npm\node_modules\pacote\lib\registry.js:130:54)
+13 verbose stack     at async Install.exec (C:\Program Files\nodejs\node_modules\npm\lib\commands\install.js:111:27)
+13 verbose stack     at async Npm.exec (C:\Program Files\nodejs\node_modules\npm\lib\npm.js:207:9)
+13 verbose stack     at async module.exports (C:\Program Files\nodejs\node_modules\npm\lib\cli\entry.js:74:5)
+14 error code ETARGET
+15 error notarget No matching version found for npm@10.9..
+16 error notarget In most cases you or one of your dependencies are requesting
+16 error notarget a package version that doesn't exist.
+17 verbose cwd C:\Users\pablo\OneDrive\Documentos\GitHub\AgroSync
+18 verbose os Windows_NT 10.0.22631
+19 verbose node v20.17.0
+20 verbose npm  v10.8.2
+21 verbose exit 1
+22 verbose code 1
+23 error A complete log of this run can be found in: C:\Users\pablo\OneDrive\Documentos\GitHub\AgroSync\UserspabloAppDataLocalnpm-cache\_logs\2024-11-28T17_53_09_675Z-debug-0.log
