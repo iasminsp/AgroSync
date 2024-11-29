@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, FlatList, StyleSheet, Image, SafeAreaView, Modal, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, StyleSheet, Image, SafeAreaView, Modal, TextInput, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { getVaquinhas, addVaquinha, deleteVaquinha } from '@/src/services/vaquinhaService';
-import { router } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 
 interface Vaquinha {
@@ -15,6 +15,14 @@ interface Vaquinha {
   setor: string;
   dataNascimento: string;
   sexo: string;
+  caracteristicasFisicas: string;
+  dataAquisicao: string;
+  registroPedigree: string;
+  origem: string;
+  tratamentosMedicos: string;
+  examesDiagnosticos: string;
+  numeroCrias: string;
+  custosAssociados: string;
 }
 
 const Index: React.FC = () => {
@@ -28,15 +36,25 @@ const Index: React.FC = () => {
     raca: '',
     setor: '',
     dataNascimento: '',
-    sexo: ''
+    sexo: '',
+    caracteristicasFisicas: '',
+    dataAquisicao: '',
+    registroPedigree: '',
+    origem: '',
+    tratamentosMedicos: '',
+    examesDiagnosticos: '',
+    numeroCrias: '',
+    custosAssociados: ''
   });
 
-  useEffect(() => {
-    const fetchVaquinhas = async () => {
-      const data = await getVaquinhas();
-      setVaquinhas(data);
-    };
+  const navigation = useNavigation();
 
+  const fetchVaquinhas = async () => {
+    const data = await getVaquinhas();
+    setVaquinhas(data);
+  };
+
+  useEffect(() => {
     fetchVaquinhas();
   }, []);
 
@@ -51,7 +69,11 @@ const Index: React.FC = () => {
 
   const handleAdd = async () => {
     try {
-      const docRef = await addVaquinha(newVaquinha.nome, newVaquinha.descricao, newVaquinha.peso, newVaquinha.tipo, newVaquinha.raca, newVaquinha.setor, newVaquinha.dataNascimento, newVaquinha.sexo);
+      const docRef = await addVaquinha(
+        newVaquinha.nome, newVaquinha.descricao, newVaquinha.peso, newVaquinha.tipo, newVaquinha.raca, newVaquinha.setor, 
+        newVaquinha.dataNascimento, newVaquinha.sexo, newVaquinha.caracteristicasFisicas, newVaquinha.dataAquisicao, newVaquinha.registroPedigree, 
+        newVaquinha.origem, newVaquinha.tratamentosMedicos, newVaquinha.examesDiagnosticos, newVaquinha.numeroCrias, newVaquinha.custosAssociados
+      );
       setVaquinhas((prevVaquinhas) => [...prevVaquinhas, { ...newVaquinha, id: docRef.id }]);
       setModalVisible(false);
       setNewVaquinha({
@@ -62,7 +84,15 @@ const Index: React.FC = () => {
         raca: '',
         setor: '',
         dataNascimento: '',
-        sexo: ''
+        sexo: '',
+        caracteristicasFisicas: '',
+        dataAquisicao: '',
+        registroPedigree: '',
+        origem: '',
+        tratamentosMedicos: '',
+        examesDiagnosticos: '',
+        numeroCrias: '',
+        custosAssociados: ''
       });
     } catch (e) {
       console.error('Erro ao adicionar vaquinha:', e);
@@ -74,29 +104,8 @@ const Index: React.FC = () => {
   };
 
   const handleNavigate = (id: string) => {
-    router.push({ pathname: 'src/app/(tabs)/menu/informacoesVaquinha', params: { id } });
+    navigation.navigate('InformacoesVaquinha', { id, updateVaquinhaList: fetchVaquinhas });
   };
-
-  const renderItem = ({ item }: { item: Vaquinha }) => (
-    <View style={styles.cardContainer}>
-      <View style={styles.card}>
-        <TouchableOpacity
-          style={styles.deleteButton}
-          onPress={() => handleDelete(item.id)}
-        >
-          <Ionicons name="trash-bin" size={20} color="#000" />
-        </TouchableOpacity>
-        <Image source={require('../../../../assets/images/vaquinha.png')} style={styles.image} />
-        <Text style={styles.cardTitle}>{item.nome || 'Sem nome'}</Text>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => handleNavigate(item.id)}
-        >
-          <Text style={styles.buttonText}>Ver Detalhes</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#d4d4d4' }}>
@@ -109,9 +118,29 @@ const Index: React.FC = () => {
         </View>
         <FlatList
           data={vaquinhas}
-          renderItem={renderItem}
+          renderItem={({ item }) => (
+            <View style={styles.cardContainer}>
+              <View style={styles.card}>
+                <TouchableOpacity
+                  style={styles.deleteButton}
+                  onPress={() => handleDelete(item.id)}
+                >
+                  <Ionicons name="trash-bin" size={20} color="#000" />
+                </TouchableOpacity>
+                <Image source={require('../../../../assets/images/vaquinha.png')} style={styles.image} />
+                <Text style={styles.cardTitle}>{item.nome || 'Sem nome'}</Text>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => handleNavigate(item.id)}
+                >
+                  <Text style={styles.buttonText}>Ver Detalhes</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.list}
+          numColumns={2} // define o número de colunas
         />
       </View>
       <StatusBar style="dark" backgroundColor="#d4d4d4" />
@@ -125,32 +154,99 @@ const Index: React.FC = () => {
         }}
       >
         <View style={styles.modalView}>
-          <Text style={styles.modalTitle}>Adicionar Vaquinha</Text>
-          <TextInput
-  style={styles.input}
-  placeholder="Nome"
-  value={newVaquinha.nome}
-  onChangeText={(text) => handleInputChange('nome', text)}
-/>
-<TextInput
-  style={styles.input}
-  placeholder="Raça"
-  value={newVaquinha.raca}
-  onChangeText={(text) => handleInputChange('raca', text)}
-/>
-<TextInput
-  style={styles.input}
-  placeholder="Peso"
-  value={newVaquinha.peso}
-  onChangeText={(text) => handleInputChange('peso', text)}
-/>
-
-          <TouchableOpacity style={styles.button} onPress={handleAdd}>
-            <Text style={styles.buttonText}>Adicionar</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => setModalVisible(false)}>
-            <Text style={styles.buttonText}>Cancelar</Text>
-          </TouchableOpacity>
+          <ScrollView>
+            <Text style={styles.modalTitle}>Adicionar Vaquinha</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Nome da vaquinha"
+              value={newVaquinha.nome}
+              onChangeText={(text) => handleInputChange('nome', text)}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Raça da vaquinha"
+              value={newVaquinha.raca}
+              onChangeText={(text) => handleInputChange('raca', text)}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Peso da vaquinha"
+              value={newVaquinha.peso}
+              onChangeText={(text) => handleInputChange('peso', text)}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Setor"
+              value={newVaquinha.setor}
+              onChangeText={(text) => handleInputChange('setor', text)}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Data de Nascimento"
+              value={newVaquinha.dataNascimento}
+              onChangeText={(text) => handleInputChange('dataNascimento', text)}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Sexo"
+              value={newVaquinha.sexo}
+              onChangeText={(text) => handleInputChange('sexo', text)}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Características Físicas"
+              value={newVaquinha.caracteristicasFisicas}
+              onChangeText={(text) => handleInputChange('caracteristicasFisicas', text)}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Data de Aquisição"
+              value={newVaquinha.dataAquisicao}
+              onChangeText={(text) => handleInputChange('dataAquisicao', text)}
+            />
+                        <TextInput
+              style={styles.input}
+              placeholder="Registro de Pedigree"
+              value={newVaquinha.registroPedigree}
+              onChangeText={(text) => handleInputChange('registroPedigree', text)}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Origem"
+              value={newVaquinha.origem}
+              onChangeText={(text) => handleInputChange('origem', text)}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Tratamentos Médicos"
+              value={newVaquinha.tratamentosMedicos}
+              onChangeText={(text) => handleInputChange('tratamentosMedicos', text)}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Exames/Diagnósticos"
+              value={newVaquinha.examesDiagnosticos}
+              onChangeText={(text) => handleInputChange('examesDiagnosticos', text)}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Número de Crias"
+              value={newVaquinha.numeroCrias}
+              onChangeText={(text) => handleInputChange('numeroCrias', text)}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Custos Associados"
+              value={newVaquinha.custosAssociados}
+              onChangeText={(text) => handleInputChange('custosAssociados', text)}
+            />
+            <TouchableOpacity style={styles.button1} onPress={handleAdd}>
+              <Text style={styles.buttonText}>Adicionar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button2} onPress={() => setModalVisible(false)}>
+              <Text style={styles.buttonText}>Cancelar</Text>
+            </TouchableOpacity>
+          </ScrollView>
         </View>
       </Modal>
     </SafeAreaView>
@@ -174,14 +270,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   list: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
     paddingBottom: 16,
   },
   cardContainer: {
-    width: '100%',
+    flex: 1,
     marginBottom: 27,
+    marginHorizontal: 5,
   },
   card: {
     backgroundColor: '#1E4034',
@@ -233,8 +327,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
-      width: 0,
-      height: 2,
+      width: 0, height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
@@ -253,7 +346,13 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 10,
   },
-  button: {
+  button1: {
+    backgroundColor: '#1E4034',
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  button2: {
     backgroundColor: '#1E4034',
     padding: 10,
     borderRadius: 5,

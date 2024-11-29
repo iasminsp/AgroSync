@@ -8,9 +8,20 @@ interface Vaquinha {
   peso: string;
   tipo: string;
   raca: string;
+  setor: string;
+  dataNascimento: string;
+  sexo: string;
+  caracteristicasFisicas: string;
+  dataAquisicao: string;
+  registroPedigree: string;
+  origem: string;
+  tratamentosMedicos: string;
+  examesDiagnosticos: string;
+  numeroCrias: string;
+  custosAssociados: string;
 }
 
-export const addVaquinha = async (nome: string, descricao: string, peso: string, tipo: string, raca: string): Promise<any> => {
+export const addVaquinha = async (nome: string, descricao: string, peso: string, tipo: string, raca: string, setor: string, dataNascimento: string, sexo: string, caracteristicasFisicas: string, dataAquisicao: string, registroPedigree: string, origem: string, tratamentosMedicos: string, examesDiagnosticos: string, numeroCrias: string, custosAssociados: string): Promise<any> => {
   try {
     const docRef = await addDoc(collection(db, 'vaquinhas'), {
       nome,
@@ -18,6 +29,17 @@ export const addVaquinha = async (nome: string, descricao: string, peso: string,
       peso,
       tipo,
       raca,
+      setor,
+      dataNascimento,
+      sexo,
+      caracteristicasFisicas,
+      dataAquisicao,
+      registroPedigree,
+      origem,
+      tratamentosMedicos,
+      examesDiagnosticos,
+      numeroCrias,
+      custosAssociados,
     });
     console.log('Documento adicionado com ID:', docRef.id);
     return docRef;
