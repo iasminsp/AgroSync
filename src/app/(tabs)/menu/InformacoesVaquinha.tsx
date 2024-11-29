@@ -221,7 +221,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#fff',
+    paddingBottom:50,
+    backgroundColor: '#c6c6c6',
   },
   header: {
     flexDirection: 'row',
@@ -233,6 +234,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginLeft: 10,
+    color:'#1E4034',
   },
   content: {
     flex: 1,
@@ -240,6 +242,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 18,
     marginVertical: 10,
+    color:'#1E4034',
   },
   input: {
     borderWidth: 1,
@@ -247,6 +250,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     marginBottom: 20,
+    color:'#1E4034',
   },
   footer: {
     flexDirection: 'row',

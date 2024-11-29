@@ -3,8 +3,9 @@ import {
   View,
   Text,
   TouchableOpacity,
-  StyleSheet,Image,
-  SafeAreaView
+  StyleSheet,
+  Image,
+  SafeAreaView,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useNavigation } from "@react-navigation/native";
@@ -17,7 +18,7 @@ const Relatorio: React.FC = () => {
   const [show, setShow] = useState(false);
 
   const handleGerarRelatorio = () => {
-    navigation.navigate("relatorioDia");
+    navigation.navigate("relatorioDia", { dataSelecionada: date });
   };
 
   const onChange = (event: any, selectedDate?: Date) => {
@@ -27,20 +28,25 @@ const Relatorio: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#0E5959'}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#0E5959" }}>
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.headerText}>Relatórios</Text>
           <TouchableOpacity
-          onPress={() => setShow(true)}
-          style={styles.dateButton}
-        >
-          <AntDesign name="calendar" size={20} color="#fff" />
-        </TouchableOpacity>
+            onPress={() => setShow(true)}
+            style={styles.dateButton}
+          >
+            <AntDesign name="calendar" size={20} color="#fff" />
+          </TouchableOpacity>
 
-        {show && (
-          <DateTimePicker value={date} mode="date" display="default" onChange={onChange} />
-        )}
+          {show && (
+            <DateTimePicker
+              value={date}
+              mode="date"
+              display="default"
+              onChange={onChange}
+            />
+          )}
         </View>
         <TouchableOpacity
           style={styles.gerarRelatorioButton}
@@ -48,12 +54,21 @@ const Relatorio: React.FC = () => {
         >
           <Text style={styles.buttonText}>Gerar Relatório</Text>
         </TouchableOpacity>
-        <Text style={{ color: "#0E5959", fontSize: 18,marginLeft:'65%', }}>{date.toLocaleDateString()}</Text>
-        <Image source={require('../../../../assets/images/Manchinha.png')} style={styles.image} />
+        <Text
+          style={{
+            color: "#0E5959",
+            fontSize: 18,
+            marginLeft: "65%",
+          }}
+        >
+          {date.toLocaleDateString()}
+        </Text>
+        <Image
+          source={require("../../../../assets/images/Manchinha.png")}
+          style={styles.image}
+        />
       </View>
-      <StatusBar
-        style="light"
-      />
+      <StatusBar style="light" />
     </SafeAreaView>
   );
 };
@@ -86,12 +101,12 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   gerarRelatorioButton: {
-    marginTop: '50%',
-    backgroundColor: '#1E4034',
+    marginTop: "50%",
+    backgroundColor: "#1E4034",
     borderRadius: 10,
     padding: 15,
-    marginLeft:'10%',
-    width:'80%',
+    marginLeft: "10%",
+    width: "80%",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -100,12 +115,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
   },
-  image:{
-    marginTop: '52%',
+  image: {
+    marginTop: "52%",
     borderRadius: 10,
     padding: 0,
-    alignItems: 'flex-end',
-  }
+    alignItems: "flex-end",
+  },
 });
 
 export default Relatorio;

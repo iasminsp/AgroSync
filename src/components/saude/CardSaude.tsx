@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
+import Modalfiltro from './modalFiltro';
 
 interface CardProps {
   id: string;
@@ -33,7 +34,7 @@ const CardSaude: React.FC<CardProps> = ({ id, titulo, descricao, selectedDate, o
         style={{
           borderRadius: 12,
           justifyContent: "space-between",
-          padding: 10, 
+          padding: 18, 
           margin: 25, 
           shadowColor: "#000",
           shadowOffset: { width: 0, height: 2 },
@@ -46,12 +47,13 @@ const CardSaude: React.FC<CardProps> = ({ id, titulo, descricao, selectedDate, o
           maxHeight: showDetails ? 140 : 120,
         }}
       >
-        <View style={{flexDirection: 'row', justifyContent: 'space-between', width: '100%', paddingHorizontal: 10}}>
-          <TouchableOpacity onPress={() => deleteCard(id)}>
-            <MaterialIcons name="delete-outline" size={20} color='#10A4EE' />
+        <View style={{flexDirection: 'row', justifyContent: 'space-between', width: '100%', paddingHorizontal: 0}}>
+          <TouchableOpacity>
+            <Feather name="edit-2" size={20} color="#1E4034" />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => setModalVisible(true)}>
-            <Feather name="edit-2" size={20} color='#10A4EE' />
+          
+          <TouchableOpacity onPress={() => deleteCard(id)}>
+            <MaterialIcons name="delete-outline" size={24} color='#10A4EE' />
           </TouchableOpacity>
         </View>
 
@@ -62,7 +64,7 @@ const CardSaude: React.FC<CardProps> = ({ id, titulo, descricao, selectedDate, o
 
         {/* Descrição do card, exibida somente se showDetails estiver ativo */}
         {showDetails && (
-          <View style={{ position: 'absolute', left: '48%', top: '60%' }}>
+          <View style={{ position: 'absolute', left: '48%', top: '68%' }}>
             <Text style={{ color: '#d5d5d5', fontSize: 14 }}>{descricao}</Text>
             {selectedDate && (
               <Text style={{ color: '#d5d5d5', fontSize: 14 }}>
@@ -72,12 +74,13 @@ const CardSaude: React.FC<CardProps> = ({ id, titulo, descricao, selectedDate, o
           </View>
         )}
         {/* Ícone de vaca */}
-        <View style={{ marginLeft: '4%', marginTop: '5%' }}>
+        <View style={{ marginLeft: '4%', marginTop: '4%' }}>
           <FontAwesome6 name="cow" size={60} color="white" />
         </View>
       </View>
       {showDetails}
     </TouchableOpacity>
+    
   );
 };
 

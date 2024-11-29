@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { getVaquinhas, addVaquinha, deleteVaquinha } from '@/src/services/vaquinhaService';
 import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
+import SuperiorSaude from '@/src/components/saude/superiorSaude';
 
 interface Vaquinha {
   id: string;
@@ -109,9 +110,9 @@ const Index: React.FC = () => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#d4d4d4' }}>
+      <SuperiorSaude titulo={"Vaquinhas"}/>
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>Vaquinhas</Text>
           <TouchableOpacity onPress={() => setModalVisible(true)}>
             <Ionicons name="add-circle" size={30} color="#1E4034" />
           </TouchableOpacity>
@@ -264,6 +265,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 20,
+    marginLeft:"90%",
+    marginTop:'-15%'
   },
   headerTitle: {
     fontSize: 24,

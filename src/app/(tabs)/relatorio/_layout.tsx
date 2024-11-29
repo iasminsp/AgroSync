@@ -10,7 +10,7 @@ const LayoutRelatorio = () => {
       />
       <Stack.Screen
           name="relatorioDia"
-          options={{ headerShown: true }}
+          options={{ headerShown: false }}
         />
     </Stack>
   )

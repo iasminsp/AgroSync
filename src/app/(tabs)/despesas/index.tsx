@@ -25,30 +25,28 @@ const GraficoVaquinhas = () => {
     try {
       console.log("Carregando dados das vaquinhas...");
       const querySnapshot = await getDocs(collection(db, "vaquinhas"));
-      const vaquinhas = querySnapshot.docs.map((doc) => ({
-        nome: doc.data().nome || "Sem Nome",
-        descricao: doc.data().descricao || "Sem Descrição",
-      }));
+      const vaquinhas = querySnapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          nome: data?.nome || "Sem Nome",
+          descricao: data?.descricao || "Sem Descrição",
+        };
+      });
 
-      // Agrupar por descrição
       const agrupadoPorDescricao = vaquinhas.reduce((acc, vaquinha) => {
         const descricao = vaquinha.descricao;
         if (!acc[descricao]) {
           acc[descricao] = { total: 0 };
         }
-        acc[descricao].total += 1; // Contar ocorrências
+        acc[descricao].total += 1;
         return acc;
       }, {});
 
-      const dadosFormatados = Object.keys(agrupadoPorDescricao).map((descricao) => {
-        const total = agrupadoPorDescricao[descricao].total;
-        return {
-          label: descricao, // Exibir a descrição no rótulo
-          value: total, // Quantidade de vacas com a mesma descrição
-        };
-      });
+      const dadosFormatados = Object.keys(agrupadoPorDescricao).map((descricao) => ({
+        label: descricao,
+        value: agrupadoPorDescricao[descricao].total,
+      }));
 
-      // Definir dados para o gráfico
       setDadosGrafico(dadosFormatados);
     } catch (e) {
       console.error("Erro ao carregar vaquinhas:", e);
@@ -97,7 +95,9 @@ const GraficoVaquinhas = () => {
         <TouchableOpacity onPress={carregarVaquinhas} style={styles.button}>
           <Text style={styles.buttonText}>Atualizar Gráfico</Text>
         </TouchableOpacity>
-        <FormularioDia titulo={"Formulário Dia a Dia"} rota={"formularioDia"} />
+        <FormularioDia titulo={"Formulário Dia a Dia"} rota={"formularioDia"} vacas={{
+          uid: ""
+        }} />
       </View>
     </View>
   );
@@ -107,14 +107,12 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     backgroundColor: "#D3D3D3",
-   
   },
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     padding: 16,
-    marginTop: "0%", // Compensar a altura do cabeçalho
   },
   title: {
     fontSize: 20,

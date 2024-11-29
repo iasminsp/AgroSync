@@ -1,7 +1,18 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Alert, StyleSheet, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  Alert,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  FlatList,
+} from 'react-native';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from "../../../../firebaseConfig";
+import { getVaquinhas } from "@/src/services/vaquinhaService";
 
 export default function FormularioDia() {
   const [idVaca, setIdVaca] = useState('');
@@ -9,6 +20,21 @@ export default function FormularioDia() {
   const [vacina, setVacina] = useState('');
   const [alimentacao, setAlimentacao] = useState('');
   const [peso, setPeso] = useState('');
+  const [vaquinhas, setVaquinhas] = useState<string[]>([]);
+  const [busca, setBusca] = useState('');
+  const [mostrarVaquinhas, setMostrarVaquinhas] = useState(false);
+
+  useEffect(() => {
+    const fetchVaquinhas = async () => {
+      try {
+        const data = await getVaquinhas();
+        setVaquinhas(data.map((vaquinha) => vaquinha.nome));
+      } catch (error) {
+        console.error("Erro ao buscar vaquinhas:", error);
+      }
+    };
+    fetchVaquinhas();
+  }, []);
 
   const registrarDados = async () => {
     if (!idVaca || !litrosLeite || !peso) {
@@ -17,7 +43,6 @@ export default function FormularioDia() {
     }
 
     try {
-      // Salva os dados no Firestore
       await addDoc(collection(db, 'vacas'), {
         idVaca,
         litrosLeite: parseFloat(litrosLeite),
@@ -44,6 +69,17 @@ export default function FormularioDia() {
     setVacina('');
     setAlimentacao('');
     setPeso('');
+    setBusca('');
+  };
+
+  const vaquinhasFiltradas = vaquinhas.filter((nome) =>
+    nome.toLowerCase().includes(busca.toLowerCase())
+  );
+
+  const handleVaquinhaSelect = (nome: string) => {
+    setIdVaca(nome);
+    setBusca('');
+    setMostrarVaquinhas(false);
   };
 
   return (
@@ -53,11 +89,30 @@ export default function FormularioDia() {
       <Text style={styles.label}>ID da Vaca</Text>
       <TextInput
         style={styles.input}
-        placeholder="Digite o ID da vaca"
-        keyboardType="numeric"
+        placeholder="Digite o ID da vaca ou busque..."
         value={idVaca}
-        onChangeText={setIdVaca}
+        onChangeText={(text) => {
+          setIdVaca(text);
+          setBusca(text);
+          setMostrarVaquinhas(true);
+        }}
       />
+
+      {mostrarVaquinhas && vaquinhasFiltradas.length > 0 && (
+        <FlatList
+          style={styles.vaquinhasContainer}
+          data={vaquinhasFiltradas}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() => handleVaquinhaSelect(item)}
+              style={styles.vaquinhaItem}
+            >
+              <Text style={styles.vaquinhaText}>{item}</Text>
+            </TouchableOpacity>
+          )}
+        />
+      )}
 
       <Text style={styles.label}>Litros de Leite Produzidos</Text>
       <TextInput
@@ -101,20 +156,21 @@ export default function FormularioDia() {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    padding: 20,
+    padding: 28,
     backgroundColor: '#0E5959',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 20,
-    color: "#ffff",
+    marginBottom: 24,
+    marginTop: '15%',
+    color: "#fff",
   },
   label: {
     fontSize: 16,
     marginTop: 10,
-    color: "#ffff",
+    color: "#fff",
     fontWeight: 'bold',
   },
   input: {
@@ -126,5 +182,20 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginBottom: 10,
     backgroundColor: '#fff',
+  },
+  vaquinhasContainer: {
+    maxHeight: 200,
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  vaquinhaItem: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderColor: '#ccc',
+  },
+  vaquinhaText: {
+    fontSize: 16,
+    color: '#333',
   },
 });
