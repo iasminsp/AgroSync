@@ -165,6 +165,12 @@ const Index: React.FC = () => {
             />
             <TextInput
               style={styles.input}
+              placeholder="Descricao"
+              value={newVaquinha.descricao}
+              onChangeText={(text) => handleInputChange('descricao', text)}
+            />
+            <TextInput
+              style={styles.input}
               placeholder="Raça da vaquinha"
               value={newVaquinha.raca}
               onChangeText={(text) => handleInputChange('raca', text)}
