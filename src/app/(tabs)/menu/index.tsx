@@ -109,7 +109,7 @@ const Index: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#d4d4d4' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#1E4034' }}>
       <SuperiorSaude titulo={"Vaquinhas"}/>
       <View style={styles.container}>
         <View style={styles.header}>
@@ -144,7 +144,7 @@ const Index: React.FC = () => {
           numColumns={2} // define o número de colunas
         />
       </View>
-      <StatusBar style="dark" backgroundColor="#d4d4d4" />
+      <StatusBar style="light" />
 
       <Modal
         animationType="slide"

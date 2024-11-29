@@ -7,6 +7,7 @@ import { auth, firestore } from "@/firebaseConfig"
 import { doc, setDoc } from "firebase/firestore"
 import { useState, useRef } from "react"
 import { router } from "expo-router"
+import React = require("react")
 
 const SignUp = () => {
     const [email, setEmail] = useState('')

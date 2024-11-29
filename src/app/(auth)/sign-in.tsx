@@ -8,6 +8,7 @@ import { signInWithEmailAndPassword } from "firebase/auth"
 import { auth, firestore } from "@/firebaseConfig"
 import { doc, getDoc } from "firebase/firestore"
 import SignUp from "./sign-up"
+import React = require("react")
 
 
 const SignIn = () => {

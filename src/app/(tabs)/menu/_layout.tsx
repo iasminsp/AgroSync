@@ -9,7 +9,7 @@ const LayoutMenu = () => {
         options={{ headerShown: false }} 
       />
       <Stack.Screen
-        name="informacoesVaquinha"
+        name="InformacoesVaquinha"
         options={{ headerShown: false }}
       />
     </Stack>
