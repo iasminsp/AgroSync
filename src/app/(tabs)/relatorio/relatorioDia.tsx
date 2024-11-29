@@ -1,22 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, FlatList, StyleSheet, ActivityIndicator } from "react-native";
+import { useRoute } from "@react-navigation/native";
 import { db } from "../../../../firebaseConfig";
 import { collection, query, where, getDocs } from "firebase/firestore";
+import SuperiorPD from "@/src/components/saude/superiorPD";
+import TituloPD from "@/src/components/saude/TituloPD";
+import SuperiorR from "@/src/components/relatorio/tituloR";
 
 const RelatorioDiario: React.FC = () => {
+  const route = useRoute();
+  const { dataSelecionada } = route.params as { dataSelecionada: Date };
+
   const [dados, setDados] = useState<any[]>([]);
   const [carregando, setCarregando] = useState(true);
 
   useEffect(() => {
-    carregarRelatorio();
-  }, []);
+    carregarRelatorio(dataSelecionada);
+  }, [dataSelecionada]);
 
-  const carregarRelatorio = async () => {
+  const carregarRelatorio = async (data: Date) => {
     setCarregando(true);
     try {
-      const hoje = new Date();
-      const dataInicio = new Date(hoje.setHours(0, 0, 0, 0)).toISOString();
-      const dataFim = new Date(hoje.setHours(23, 59, 59, 999)).toISOString();
+      const dataInicio = new Date(data.setHours(0, 0, 0, 0)).toISOString();
+      const dataFim = new Date(data.setHours(23, 59, 59, 999)).toISOString();
 
       const q = query(
         collection(db, "vacas"),
@@ -49,33 +55,36 @@ const RelatorioDiario: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Relatório Diário</Text>
-      {dados.length === 0 ? (
-        <Text style={styles.noData}>Nenhum dado disponível para hoje.</Text>
-      ) : (
-        <FlatList
-          data={dados}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View style={styles.item}>
-              <Text style={styles.itemText}>• ID da Vaca: {item.idVaca}</Text>
-              <Text style={styles.itemText}>• Litros de Leite: {item.litrosLeite}</Text>
-              <Text style={styles.itemText}>• Vacina: {item.vacina || "Não informado"}</Text>
-              <Text style={styles.itemText}>• Alimentação: {item.alimentacao || "Não informado"}</Text>
-              <Text style={styles.itemText}>• Peso: {item.peso} kg</Text>
-            </View>
+        <SuperiorR titulo={"realatorio"} />
+
+          <Text style={styles.title}>
+              Relatório Diário - {new Date(dataSelecionada).toLocaleDateString()}
+          </Text>
+          {dados.length === 0 ? (
+              <Text style={styles.noData}>Nenhum dado disponível para hoje.</Text>
+          ) : (
+              <FlatList
+                  data={dados}
+                  keyExtractor={(item) => item.id}
+                  renderItem={({ item }) => (
+                      <View style={styles.item}>
+                          <Text style={styles.itemText}>• ID da Vaca: {item.idVaca}</Text>
+                          <Text style={styles.itemText}>• Litros de Leite: {item.litrosLeite}</Text>
+                          <Text style={styles.itemText}>• Vacina: {item.vacina || "Não informado"}</Text>
+                          <Text style={styles.itemText}>• Alimentação: {item.alimentacao || "Não informado"}</Text>
+                          <Text style={styles.itemText}>• Peso: {item.peso} kg</Text>
+                      </View>
+                  )} />
           )}
-        />
-      )}
-    </View>
+      </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1E4034',
-    padding: 20,
+    backgroundColor: "#1E4034",
+    padding: 8,
   },
   title: {
     fontSize: 24,
