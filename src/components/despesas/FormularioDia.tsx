@@ -16,9 +16,10 @@ const FormularioDia: React.FC<botomProps> = ({ titulo, rota, vacas }) => {
     const handlePress = () => {
         navigation.navigate(rota);
     }
-
+    //const userDoc = await getDoc(doc(firestore, 'users', user.uid));
     useEffect(() => {
         const fetchData = async () => {
+            console.log("UID: ",vacas)
             const docRef = doc(firestore, 'vacas', vacas.uid);
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
@@ -28,6 +29,12 @@ const FormularioDia: React.FC<botomProps> = ({ titulo, rota, vacas }) => {
             }
         };
         fetchData();
+
+        const myFunc = () => {
+            console.log("UID: ",vacas)
+            alert('Login com sucesso! '+vacas)
+        }
+        myFunc()
     }, [vacas.uid]);
 
     return (
